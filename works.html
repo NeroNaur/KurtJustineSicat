@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Works — Kurt Justine Sicat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0d0d0d;
+      --white: #f4f4f0;
+      --gray: #7a7a7a;
+      --accent: #c0c0c0;
+      --line: rgba(244,244,240,0.08);
+      --card-bg: #141414;
+      --max: 1400px;
+    }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      background: var(--black); color: var(--white);
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      overflow-x: hidden; cursor: none; min-height: 100vh;
+    }
+    .cursor {
+      width: 8px; height: 8px; background: var(--white); border-radius: 50%;
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      width: 34px; height: 34px; border: 1px solid rgba(244,244,240,0.4); border-radius: 50%;
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 1000; pointer-events: none; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: linear-gradient(to bottom, rgba(13,13,13,0.98) 0%, rgba(13,13,13,0.5) 65%, transparent 100%);
+    }
+    .nav-inner {
+      max-width: var(--max); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 30px 60px;
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 0.08em; color: var(--white); text-decoration: none;
+      display: flex; align-items: center;
+    }
+    .nav-logo-img { width: 35px; height: 35px; object-fit: contain; margin-right: 8px; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gray); text-decoration: none; transition: color 0.25s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -5px; left: 0;
+      width: 0; height: 1px; background: var(--accent); transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--accent); }
+
+    /* PAGE HEADER */
+    .page-header {
+      max-width: var(--max); margin: 0 auto;
+      padding: 160px 60px 80px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+    .page-tag {
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    }
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(60px, 9vw, 130px);
+      line-height: 0.85; color: var(--white); letter-spacing: 0.01em;
+    }
+    .page-title .outline {
+      -webkit-text-stroke: 1.5px rgba(244,244,240,0.15);
+      color: transparent;
+    }
+    .header-right {
+      text-align: right; padding-bottom: 8px;
+    }
+    .project-count {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px; color: rgba(244,244,240,0.04); line-height: 1;
+    }
+    .header-meta {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray);
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      max-width: var(--max); margin: 0 auto;
+      padding: 0 60px 52px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards;
+      border-bottom: 1px solid var(--line);
+    }
+    .filter-btn {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gray); border: 1px solid var(--line);
+      background: transparent; padding: 7px 16px; cursor: none;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .filter-btn:hover { color: var(--white); border-color: rgba(244,244,240,0.2); }
+    .filter-btn.active {
+      color: var(--black); background: var(--accent); border-color: var(--accent);
+    }
+
+    /* PROJECTS GRID */
+    .projects-wrap {
+      max-width: var(--max); margin: 0 auto;
+      padding: 0 60px 120px;
+    }
+
+    /* ── WOW FEATURE: alternating large/small layout ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1px; background: var(--line);
+      margin-top: 1px;
+    }
+
+    /* Card base */
+    .proj-card {
+      background: var(--card-bg);
+      position: relative; overflow: hidden;
+      cursor: none; transition: background 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .proj-card:hover { background: #181818; }
+
+    /* Layout spans */
+    .proj-card.large  { grid-column: span 7; }
+    .proj-card.medium { grid-column: span 5; }
+    .proj-card.full   { grid-column: span 12; }
+    .proj-card.half   { grid-column: span 6; }
+
+    /* Top line accent on hover */
+    .proj-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: var(--accent); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.45s ease; z-index: 2;
+    }
+    .proj-card:hover::before { transform: scaleX(1); }
+
+    /* Card image */
+    .proj-img {
+      width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative;
+      background: rgba(244,244,240,0.02);
+    }
+    .proj-card.large .proj-img  { aspect-ratio: 16/8; }
+    .proj-card.full  .proj-img  { aspect-ratio: 21/6; }
+    .proj-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(20%) brightness(0.5);
+      transition: filter 0.5s ease, transform 0.6s ease;
+    }
+    .proj-card:hover .proj-img img {
+      filter: grayscale(0%) brightness(0.65);
+      transform: scale(1.03);
+    }
+    .proj-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(13,13,13,0.7) 100%);
+      z-index: 1;
+    }
+    /* Fallback when no image */
+    .proj-img-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; color: rgba(244,244,240,0.08);
+    }
+    .proj-img-placeholder svg { width: 36px; height: 36px; }
+    .proj-img-placeholder span {
+      font-family: 'Space Mono', monospace; font-size: 8px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .proj-img img.loaded ~ .proj-img-placeholder { display: none; }
+
+    /* WOW FEATURE: floating index number on image */
+    .proj-index {
+      position: absolute; top: 20px; left: 24px; z-index: 3;
+      font-family: 'Bebas Neue', sans-serif; font-size: 13px;
+      letter-spacing: 0.2em; color: rgba(244,244,240,0.5);
+      background: rgba(13,13,13,0.6); padding: 2px 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* WOW FEATURE: status badge */
+    .proj-status {
+      position: absolute; top: 20px; right: 24px; z-index: 3;
+      font-family: 'Space Mono', monospace; font-size: 8px;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 4px 10px; background: rgba(13,13,13,0.7);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(192,192,192,0.2); color: var(--accent);
+    }
+    .proj-status.wip { border-color: rgba(192,192,192,0.15); color: rgba(192,192,192,0.4); }
+
+    /* Card body */
+    .proj-body { padding: 28px 32px 36px; flex: 1; display: flex; flex-direction: column; }
+    .proj-card.large .proj-body  { padding: 32px 40px 44px; }
+    .proj-card.full  .proj-body  { padding: 28px 40px 36px; }
+
+    .proj-type {
+      font-family: 'Space Mono', monospace; font-size: 8px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 10px;
+    }
+    .proj-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(26px, 3vw, 42px); color: var(--white);
+      letter-spacing: 0.02em; line-height: 1; margin-bottom: 12px;
+      transition: letter-spacing 0.3s;
+    }
+    .proj-card:hover .proj-name { letter-spacing: 0.05em; }
+    .proj-desc {
+      font-size: 13px; line-height: 1.75; color: var(--gray);
+      margin-bottom: 24px; flex: 1;
+    }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+    .proj-tag {
+      font-family: 'Space Mono', monospace; font-size: 8px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gray); border: 1px solid var(--line); padding: 4px 10px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .proj-card:hover .proj-tag { border-color: rgba(192,192,192,0.2); color: rgba(192,192,192,0.7); }
+
+    /* WOW FEATURE: bottom row with year + arrow */
+    .proj-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 20px; border-top: 1px solid var(--line);
+      margin-top: auto;
+    }
+    .proj-year {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.14em; color: rgba(122,122,122,0.5);
+    }
+    .proj-arrow {
+      width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray); font-size: 14px;
+      transition: border-color 0.3s, color 0.3s, transform 0.3s;
+    }
+    .proj-card:hover .proj-arrow {
+      border-color: var(--accent); color: var(--accent); transform: rotate(45deg);
+    }
+
+    /* WOW FEATURE: marquee-style project counter strip */
+    .works-strip {
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 14px 0; overflow: hidden; margin-bottom: 0;
+      opacity: 0; animation: fadeIn 0.6s ease 0.6s forwards;
+    }
+    .strip-track {
+      display: flex; gap: 52px; white-space: nowrap;
+      animation: marquee 18s linear infinite;
+    }
+    .strip-item {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(122,122,122,0.35); flex-shrink: 0;
+    }
+    .strip-dot {
+      display: inline-block; width: 3px; height: 3px;
+      background: var(--accent); border-radius: 50%;
+      vertical-align: middle; margin: 0 24px; opacity: 0.4;
+    }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--line); }
+    .footer-inner {
+      max-width: var(--max); margin: 0 auto; padding: 28px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(122,122,122,0.45);
+    }
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray); text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    /* Hidden for filter */
+    .proj-card.hidden {
+      display: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .proj-card.large, .proj-card.medium { grid-column: span 6; }
+      .proj-card.full { grid-column: span 12; }
+    }
+    @media (max-width: 768px) {
+      .nav-inner { padding: 22px 28px; }
+      .nav-links { gap: 18px; }
+      .page-header { padding: 120px 28px 52px; flex-direction: column; gap: 16px; align-items: flex-start; }
+      .filter-bar { padding: 0 28px 40px; }
+      .projects-wrap { padding: 0 28px 80px; }
+      .proj-card.large, .proj-card.medium, .proj-card.half, .proj-card.full { grid-column: span 12; }
+      .footer-inner { padding: 22px 28px; flex-direction: column; gap: 14px; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="images/logo.png" alt="KJS Logo" class="nav-logo-img" />Sicat
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="works.html" class="active">Works</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-tag">Selected Projects</div>
+      <h1 class="page-title">My <span class="outline">Works.</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="project-count">06</div>
+      <div class="header-meta">Projects · 2022 — Present</div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="service">Service Platform</button>
+    <button class="filter-btn" data-filter="transport">Transportation</button>
+    <button class="filter-btn" data-filter="business">Business Website</button>
+  </div>
+
+  <!-- STRIP -->
+  <div class="works-strip">
+    <div class="strip-track">
+      <span class="strip-item">Full Stack Dev</span><span class="strip-dot"></span>
+      <span class="strip-item">Web Design</span><span class="strip-dot"></span>
+      <span class="strip-item">UI / UX</span><span class="strip-dot"></span>
+      <span class="strip-item">Database Design</span><span class="strip-dot"></span>
+      <span class="strip-item">RESTful API</span><span class="strip-dot"></span>
+      <span class="strip-item">Responsive</span><span class="strip-dot"></span>
+      <span class="strip-item">Full Stack Dev</span><span class="strip-dot"></span>
+      <span class="strip-item">Web Design</span><span class="strip-dot"></span>
+      <span class="strip-item">UI / UX</span><span class="strip-dot"></span>
+      <span class="strip-item">Database Design</span><span class="strip-dot"></span>
+      <span class="strip-item">RESTful API</span><span class="strip-dot"></span>
+      <span class="strip-item">Responsive</span><span class="strip-dot"></span>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="projects-wrap">
+    <div class="projects-grid" id="projectsGrid">
+
+      <!-- 01 Velasquez Funeral — LARGE -->
+      <div class="proj-card large" data-category="business">
+        <div class="proj-img">
+          <img src="images/velasquez.jpg" alt="VelasquezFuneral" onload="this.classList.add('loaded')" />
+          <div class="proj-img-overlay"></div>
+          <div class="proj-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>Project Preview</span>
+          </div>
+          <div class="proj-index">01</div>
+          <div class="proj-status">Live</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Business Website</div>
+          <div class="proj-name">Velasquez Funeral & Chapel</div>
+          <p class="proj-desc">A warm, family-owned funeral home website serving Cabiao, Nueva Ecija — complete with a custom admin CMS, tiered service packages, a casket gallery, and a grief support blog.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Vue.js 3</span>
+            <span class="proj-tag">Node.js</span>
+            <span class="proj-tag">Express</span>
+            <span class="proj-tag">MongoDB Atlas</span>
+            <span class="proj-tag">Cloudinary</span>
+            <span class="proj-tag">TinyMCE</span>
+          </div>
+          <div class="proj-footer">
+            <span class="proj-year">2024</span>
+            <span class="proj-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 GrabMeYaya — MEDIUM -->
+      <div class="proj-card medium" data-category="service">
+        <div class="proj-img">
+          <img src="images/grabmeyaya.jpg" alt="GrabMeYaya" onload="this.classList.add('loaded')" />
+          <div class="proj-img-overlay"></div>
+          <div class="proj-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>Project Preview</span>
+          </div>
+          <div class="proj-index">02</div>
+          <div class="proj-status">Live</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Service Platform</div>
+          <div class="proj-name">GrabMeYaya</div>
+          <p class="proj-desc">A web-based platform connecting parents with qualified nannies in Angeles City. Users can register, post or apply for jobs, and manage profiles through a full CRUD-based database system.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">MySQL</span>
+            <span class="proj-tag">CRUD</span>
+            <span class="proj-tag">PHP</span>
+            <span class="proj-tag">Service Platform</span>
+          </div>
+          <div class="proj-footer">
+            <span class="proj-year">2023</span>
+            <span class="proj-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Fixify — LARGE -->
+      <div class="proj-card large" data-category="service">
+        <div class="proj-img">
+          <img src="images/fixify.jpg" alt="Fixify" onload="this.classList.add('loaded')" />
+          <div class="proj-img-overlay"></div>
+          <div class="proj-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>Project Preview</span>
+          </div>
+          <div class="proj-index">03</div>
+          <div class="proj-status">Live</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Service Marketplace</div>
+          <div class="proj-name">Fixify</div>
+          <p class="proj-desc">A web-based service marketplace bridging customers with vetted local providers in Angeles City — handling everything from plumbing and electrical work to cleaning, with seamless booking and JWT-secured accounts.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Vue.js 3</span>
+            <span class="proj-tag">Node.js</span>
+            <span class="proj-tag">Express.js</span>
+            <span class="proj-tag">MongoDB Atlas</span>
+            <span class="proj-tag">JWT Auth</span>
+          </div>
+          <div class="proj-footer">
+            <span class="proj-year">2024</span>
+            <span class="proj-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Tripify — MEDIUM -->
+      <div class="proj-card medium" data-category="transport">
+        <div class="proj-img">
+          <img src="images/tripify.jpg" alt="Tripify" onload="this.classList.add('loaded')" />
+          <div class="proj-img-overlay"></div>
+          <div class="proj-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>Project Preview</span>
+          </div>
+          <div class="proj-index">04</div>
+          <div class="proj-status">Live</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">Transportation Website</div>
+          <div class="proj-name">Tripify</div>
+          <p class="proj-desc">A transportation web platform designed to provide efficient and convenient travel solutions for users across the region.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Web App</span>
+            <span class="proj-tag">Transport</span>
+          </div>
+          <div class="proj-footer">
+            <span class="proj-year">2023</span>
+            <span class="proj-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 — HALF -->
+      <div class="proj-card half" data-category="service">
+        <div class="proj-img">
+          <div class="proj-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>Coming Soon</span>
+          </div>
+          <div class="proj-index">05</div>
+          <div class="proj-status wip">In Progress</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">[ Add Project Type ]</div>
+          <div class="proj-name">Project 05</div>
+          <p class="proj-desc">[ Add project description ]</p>
+          <div class="proj-tags">
+            <span class="proj-tag">[ Add tech stack ]</span>
+          </div>
+          <div class="proj-footer">
+            <span class="proj-year">2024</span>
+            <span class="proj-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 — HALF -->
+      <div class="proj-card half" data-category="service">
+        <div class="proj-img">
+          <div class="proj-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>Coming Soon</span>
+          </div>
+          <div class="proj-index">06</div>
+          <div class="proj-status wip">In Progress</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-type">[ Add Project Type ]</div>
+          <div class="proj-name">Project 06</div>
+          <p class="proj-desc">[ Add project description ]</p>
+          <div class="proj-tags">
+            <span class="proj-tag">[ Add tech stack ]</span>
+          </div>
+          <div class="proj-footer">
+            <span class="proj-year">2025</span>
+            <span class="proj-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-copy">© 2025 Kurt Justine Sicat — All rights reserved.</span>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/kurt-justine-sicat-14284434b/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/" target="_blank">GitHub</a>
+        <a href="https://www.facebook.com/kortnero/" target="_blank">Facebook</a>
+        <a href="https://www.instagram.com/agnosticnero/" target="_blank">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+    });
+    (function animateRing() {
+      rx += (mx - rx - 17) * 0.12;
+      ry += (my - ry - 17) * 0.12;
+      ring.style.transform = `translate(${rx}px, ${ry}px)`;
+      requestAnimationFrame(animateRing);
+    })();
+    document.querySelectorAll('a, .proj-card, .filter-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        ring.style.width = '52px'; ring.style.height = '52px';
+        ring.style.borderColor = 'rgba(192,192,192,0.5)';
+      });
+      el.addEventListener('mouseleave', () => {
+        ring.style.width = '34px'; ring.style.height = '34px';
+        ring.style.borderColor = 'rgba(244,244,240,0.4)';
+      });
+    });
+
+    // WOW FEATURE: Filter with count update
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.proj-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        let visible = 0;
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.classList.toggle('hidden', !match);
+          if (match) visible++;
+        });
+        document.querySelector('.project-count').textContent = String(visible).padStart(2, '0');
+      });
+    });
+
+    // WOW FEATURE: Magnetic arrow effect on hover
+    cards.forEach(card => {
+      const arrow = card.querySelector('.proj-arrow');
+      if (!arrow) return;
+      card.addEventListener('mousemove', e => {
+        const rect = arrow.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          const strength = (100 - dist) / 100;
+          arrow.style.transform = `rotate(45deg) translate(${dx * strength * 0.3}px, ${dy * strength * 0.3}px)`;
+        } else {
+          arrow.style.transform = 'rotate(45deg)';
+        }
+      });
+      card.addEventListener('mouseleave', () => {
+        arrow.style.transform = '';
+      });
+    });
+
+    // Scroll reveal
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.06 });
+    cards.forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = `opacity 0.6s ease ${i * 0.08}s, transform 0.6s ease ${i * 0.08}s`;
+      obs.observe(el);
+    });
+  </script>
+</body>
+</html>
