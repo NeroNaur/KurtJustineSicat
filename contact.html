@@ -243,6 +243,70 @@
     }
     .footer-links a:hover { color: var(--white); }
 
+    /* NAV PROGRESS */
+    .nav-progress { position:fixed; top:0; left:0; height:1px; background:var(--accent); z-index:9997; width:0%; transition:width 0.1s linear; }
+    nav.scrolled { background:rgba(13,13,13,0.97)!important; backdrop-filter:blur(12px); }
+
+    /* PARTICLES */
+    #particlesCanvas { position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.3; }
+
+    /* GRAIN animate */
+    body::before { animation:grain 0.8s steps(1) infinite; }
+    @keyframes grain {
+      0%,100%{background-position:0 0} 10%{background-position:-5% -10%} 20%{background-position:-15% 5%}
+      30%{background-position:7% -25%} 40%{background-position:-5% 25%} 50%{background-position:-15% 10%}
+      60%{background-position:15% 0%} 70%{background-position:0 15%} 80%{background-position:3% 35%}
+      90%{background-position:-10% 10%}
+    }
+
+    /* PAGE TITLE animated underline */
+    .title-underline {
+      display:block; height:1px;
+      background:linear-gradient(90deg, var(--accent), transparent);
+      width:0; transition:width 1.4s cubic-bezier(0.16,1,0.3,1) 0.6s;
+      margin-top:8px;
+    }
+    .title-underline.visible { width:100%; }
+
+    /* CONTACT DETAIL hover */
+    .contact-detail { position:relative; }
+    .contact-detail::before { content:''; position:absolute; left:-20px; top:0; bottom:0; width:1px; background:var(--accent); transform:scaleY(0); transform-origin:top; transition:transform 0.3s ease; }
+    .contact-detail:hover::before { transform:scaleY(1); }
+
+    /* FORM INPUT focus glow */
+    .form-input:focus, .form-textarea:focus { box-shadow:0 1px 0 0 var(--accent); }
+
+    /* FORM label slide up on focus */
+    .form-group { position:relative; }
+
+    /* BTN submit sweep */
+    .btn-submit { position:relative; overflow:hidden; }
+    .btn-submit::before { content:''; position:absolute; inset:0; background:rgba(192,192,192,0.06); transform:translateX(-100%); transition:transform 0.35s ease; z-index:0; }
+    .btn-submit:hover::before { transform:translateX(0); }
+    .btn-submit > * { position:relative; z-index:1; }
+
+    /* SOCIAL LINK sweep */
+    .social-link { position:relative; overflow:hidden; padding-bottom:2px; }
+    .social-link::before { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--white); transition:width 0.3s; }
+    .social-link:hover::before { width:100%; }
+
+    /* SUCCESS pulse */
+    .form-success { animation:successPulse 0.5s ease forwards; }
+    @keyframes successPulse { 0%{transform:translateY(6px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+
+    /* reveal classes */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.12s; }
+    .reveal-delay-2 { transition-delay:0.24s; }
+    .reveal-left { opacity:0; transform:translateX(-28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity:1; transform:translateX(0); }
+
+    /* Big title word by word */
+    .word-reveal { display:inline-block; overflow:hidden; }
+    .word-reveal span { display:inline-block; transform:translateY(110%); transition:transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .word-reveal span.visible { transform:translateY(0); }
+
     /* ANIMATIONS */
     @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
@@ -260,11 +324,13 @@
 </head>
 <body>
 
+  <div class="nav-progress" id="navProgress"></div>
+  <canvas id="particlesCanvas"></canvas>
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- NAV -->
-  <nav>
+  <nav id="mainNav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
         <img src="images/logo.png" alt="KJS Logo" class="nav-logo-img" />Sicat
@@ -282,20 +348,21 @@
   <main class="page-wrap">
 
     <!-- Header -->
-    <div class="page-header">
+    <div class="page-header reveal">
       <div class="page-tag">Get In Touch</div>
       <h1 class="page-title">
         Let's
         <span class="outline">Work</span>
         Together.
       </h1>
+      <span class="title-underline" id="titleUnderline"></span>
     </div>
 
     <!-- Grid -->
     <div class="contact-grid">
 
       <!-- LEFT: Info -->
-      <div class="contact-info">
+      <div class="contact-info reveal reveal-delay-1">
         <p class="contact-intro">
           Have a project in mind, a question, or just want to connect?
           I'm always open to new opportunities, collaborations, and interesting conversations.
@@ -303,7 +370,7 @@
 
         <div class="contact-detail">
           <div class="contact-detail-label">Email</div>
-          <a href="mailto:sicatkurt@gmail.com">sicatkurt@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#cebda7adafbaa5bbbcba8ea9a3afa7a2e0ada1a3"><span class="__cf_email__" data-cfemail="13607a7072677866616753747e727a7f3d707c7e">[email&#160;protected]</span></a>
         </div>
 
         <div class="contact-detail">
@@ -325,7 +392,7 @@
       </div>
 
       <!-- RIGHT: Form -->
-      <div class="contact-form-wrap">
+      <div class="contact-form-wrap reveal reveal-delay-2">
         <form id="contactForm">
           <div class="form-row">
             <div class="form-group">
@@ -375,40 +442,63 @@
   </footer>
 
   <script>
-    // Custom cursor
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
-    });
-    (function animateRing() {
-      rx += (mx - rx - 17) * 0.12;
-      ry += (my - ry - 17) * 0.12;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(animateRing);
-    })();
-    document.querySelectorAll('a, button, .form-input, .form-textarea').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        ring.style.width = '52px'; ring.style.height = '52px';
-        ring.style.borderColor = 'rgba(192,192,192,0.5)';
-      });
-      el.addEventListener('mouseleave', () => {
-        ring.style.width = '34px'; ring.style.height = '34px';
-        ring.style.borderColor = 'rgba(244,244,240,0.4)';
-      });
+    // ── CURSOR ──
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.transform=`translate(${mx-4}px,${my-4}px)`;});
+    (function animRing(){rx+=(mx-rx-17)*0.12;ry+=(my-ry-17)*0.12;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(animRing);})();
+    document.querySelectorAll('a,button,.form-input,.form-textarea').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(192,192,192,0.5)';});
+      el.addEventListener('mouseleave',()=>{ring.style.width='34px';ring.style.height='34px';ring.style.borderColor='rgba(244,244,240,0.4)';});
     });
 
-    // Form submit (UI only — no backend)
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
+    // ── PARTICLES ──
+    const canvas=document.getElementById('particlesCanvas'),ctx=canvas.getContext('2d');
+    let W,H,particles=[];
+    function resizeCanvas(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+    resizeCanvas();window.addEventListener('resize',resizeCanvas);
+    for(let i=0;i<55;i++)particles.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.2+0.3,vx:(Math.random()-0.5)*0.15,vy:(Math.random()-0.5)*0.15,o:Math.random()*0.35+0.08});
+    (function drawP(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(192,192,192,${p.o})`;ctx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;});requestAnimationFrame(drawP);})();
+
+    // ── NAV PROGRESS ──
+    const navEl=document.getElementById('mainNav'),progressEl=document.getElementById('navProgress');
+    window.addEventListener('scroll',()=>{
+      const s=window.scrollY/(document.body.scrollHeight-window.innerHeight);
+      progressEl.style.width=(s*100)+'%';
+      navEl.classList.toggle('scrolled',window.scrollY>60);
+    },{passive:true});
+
+    // ── SCROLL REVEAL ──
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+    },{threshold:0.08});
+    document.querySelectorAll('.reveal,.reveal-left').forEach(el=>obs.observe(el));
+
+    // ── TITLE UNDERLINE ──
+    setTimeout(()=>{document.getElementById('titleUnderline')?.classList.add('visible');},400);
+
+    // ── FORM SUBMIT with loading state ──
+    document.getElementById('contactForm').addEventListener('submit',function(e){
       e.preventDefault();
-      document.getElementById('formSuccess').style.display = 'block';
-      this.reset();
-      setTimeout(() => {
-        document.getElementById('formSuccess').style.display = 'none';
-      }, 4000);
+      const btn=this.querySelector('.btn-submit');
+      const originalHTML=btn.innerHTML;
+      btn.innerHTML='<span style="opacity:0.6;letter-spacing:0.22em;font-family:Space Mono,monospace;font-size:9px;">Sending...</span>';
+      btn.style.pointerEvents='none';
+      setTimeout(()=>{
+        const success=document.getElementById('formSuccess');
+        success.style.display='block';
+        this.reset();
+        btn.innerHTML=originalHTML;
+        btn.style.pointerEvents='';
+        setTimeout(()=>{success.style.display='none';},4000);
+      },900);
+    });
+
+    // ── FLOATING LABEL highlight on focus ──
+    document.querySelectorAll('.form-input,.form-textarea').forEach(input=>{
+      const label=input.previousElementSibling;
+      if(!label||!label.classList.contains('form-label'))return;
+      input.addEventListener('focus',()=>{label.style.color='var(--accent)';label.style.transition='color 0.2s';});
+      input.addEventListener('blur',()=>{label.style.color='';});
     });
   </script>
-</body>
-</html>
