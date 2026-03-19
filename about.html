@@ -336,37 +336,221 @@
     }
     .exp-desc { font-size: 13px; color: var(--gray); line-height: 1.8; max-width: 600px; }
 
-    /* CERTIFICATIONS */
-    .cert-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1px; background: var(--line);
+    /* ══════════════════════════════════════
+       CERTIFICATIONS — Issuer Tabs + Preview
+       ══════════════════════════════════════ */
+
+    /* Issuer tab bar */
+    .cert-tabs {
+      display: flex; gap: 0; flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 0;
     }
-    .cert-item {
-      background: var(--card-bg); padding: 32px 36px;
-      transition: background 0.3s; position: relative; overflow: hidden;
+    .cert-tab {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gray); background: transparent; border: none;
+      padding: 14px 28px; cursor: none;
+      position: relative; transition: color 0.25s;
+      display: flex; align-items: center; gap: 10px;
     }
-    .cert-item:hover { background: #181818; }
-    .cert-item::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: var(--accent); transform: scaleX(0); transform-origin: left;
-      transition: transform 0.4s ease;
+    .cert-tab::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
     }
-    .cert-item:hover::before { transform: scaleX(1); }
-    .cert-issuer {
+    .cert-tab:hover { color: var(--white); }
+    .cert-tab.active { color: var(--white); }
+    .cert-tab.active::after { transform: scaleX(1); }
+    .cert-tab-icon {
+      width: 18px; height: 18px; opacity: 0.55;
+      transition: opacity 0.25s;
+      flex-shrink: 0;
+    }
+    .cert-tab.active .cert-tab-icon,
+    .cert-tab:hover .cert-tab-icon { opacity: 1; }
+
+    /* Issuer panels */
+    .cert-panel { display: none; }
+    .cert-panel.active { display: block; }
+
+    /* Preview card — image left, details right */
+    .cert-preview-card {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; background: var(--card-bg);
+      border: 1px solid var(--line);
+      min-height: 320px;
+    }
+    .cert-preview-img {
+      position: relative; overflow: hidden;
+      background: rgba(244,244,240,0.02);
+      display: flex; align-items: center; justify-content: center;
+      border-right: 1px solid var(--line);
+    }
+    .cert-preview-img img {
+      width: 100%; height: 100%; object-fit: contain;
+      padding: 24px;
+      transition: transform 0.5s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .cert-preview-img img.loaded { opacity: 1; }
+    .cert-preview-img img:hover { transform: scale(1.02); }
+    .cert-img-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; color: rgba(244,244,240,0.12);
+    }
+    .cert-img-placeholder svg { width: 40px; height: 40px; }
+    .cert-img-placeholder span {
       font-family: 'Space Mono', monospace;
       font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .cert-preview-img img.loaded ~ .cert-img-placeholder { display: none; }
+
+    /* Details side */
+    .cert-preview-details {
+      padding: 40px 44px;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative;
+    }
+    .cert-preview-issuer {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase;
       color: var(--accent); margin-bottom: 10px;
     }
-    .cert-name {
-      font-size: 14px; font-weight: 400; color: var(--white); line-height: 1.4; margin-bottom: 14px;
+    .cert-preview-year {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.14em;
+      color: rgba(122,122,122,0.5);
+      position: absolute; top: 40px; right: 44px;
     }
-    .cert-link {
+    .cert-preview-name {
+      font-size: clamp(18px, 2.2vw, 26px); font-weight: 400;
+      color: var(--white); line-height: 1.3; margin-bottom: 28px;
+    }
+    .cert-preview-link {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      transition: gap 0.2s, color 0.2s;
+    }
+    .cert-preview-link:hover { gap: 16px; }
+    .cert-preview-link-arrow {
+      width: 18px; height: 1px; background: currentColor; position: relative;
+    }
+    .cert-preview-link-arrow::after {
+      content: ''; position: absolute; right: 0; top: -3px;
+      width: 6px; height: 6px;
+      border-right: 1px solid currentColor; border-top: 1px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    /* Cert list rows below the preview */
+    .cert-list {
+      border: 1px solid var(--line); border-top: none;
+      background: var(--card-bg);
+    }
+    .cert-row {
+      display: grid; grid-template-columns: 48px 140px 1fr 48px;
+      align-items: center; gap: 0;
+      padding: 0 24px; min-height: 72px;
+      border-bottom: 1px solid var(--line);
+      cursor: none; transition: background 0.25s;
+      position: relative;
+    }
+    .cert-row:last-child { border-bottom: none; }
+    .cert-row:hover { background: #181818; }
+    .cert-row.active-row { background: rgba(192,192,192,0.04); }
+    .cert-row::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--accent); transform: scaleY(0); transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+    .cert-row:hover::before,
+    .cert-row.active-row::before { transform: scaleY(1); }
+    .cert-row-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px; color: rgba(244,244,240,0.15); letter-spacing: 0.05em;
+    }
+    .cert-row-issuer {
       font-family: 'Space Mono', monospace;
       font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--gray); transition: color 0.2s; margin-top: auto;
+      color: var(--gray);
     }
-    a.cert-item { text-decoration: none; display: flex; flex-direction: column; cursor: none; }
-    a.cert-item:hover .cert-link { color: var(--accent); }
+    .cert-row-name {
+      font-size: 15px; font-weight: 400; color: var(--white);
+      padding: 0 20px; transition: color 0.2s;
+    }
+    .cert-row:hover .cert-row-name { color: var(--accent); }
+    .cert-row.active-row .cert-row-name { color: var(--accent); }
+    .cert-row-arrow {
+      width: 32px; height: 32px;
+      border: 1px solid var(--line); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray); font-size: 13px;
+      transition: border-color 0.25s, color 0.25s, transform 0.25s;
+      text-decoration: none; justify-self: end;
+    }
+    .cert-row:hover .cert-row-arrow { border-color: var(--accent); color: var(--accent); transform: rotate(45deg); }
+
+    /* Nav prev/next + counter */
+    .cert-nav {
+      display: flex; align-items: center; gap: 12px;
+      margin-top: 20px;
+    }
+    .cert-nav-btn {
+      width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%;
+      background: transparent; color: var(--gray);
+      display: flex; align-items: center; justify-content: center;
+      cursor: none; transition: border-color 0.25s, color 0.25s;
+      font-size: 14px;
+    }
+    .cert-nav-btn:hover { border-color: var(--accent); color: var(--white); }
+    .cert-nav-btn:disabled { opacity: 0.25; pointer-events: none; }
+    .cert-nav-counter {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.14em; color: var(--gray);
+      margin-left: 4px;
+    }
+    .cert-nav-counter strong { color: var(--white); }
+
+    /* Slide transitions on preview */
+    .cert-preview-card {
+      transition: opacity 0.3s ease;
+    }
+    .cert-preview-card.fading { opacity: 0; }
+
+    /* ── LIGHT MODE ── */
+    body.light-mode .cert-tabs { border-color: rgba(0,0,0,0.1); }
+    body.light-mode .cert-tab { color: #888; }
+    body.light-mode .cert-tab:hover { color: #1c1c1c; }
+    body.light-mode .cert-tab.active { color: #1c1c1c; }
+    body.light-mode .cert-tab::after { background: #8a6500; }
+    body.light-mode .cert-preview-card { background: #e4e2de; border-color: rgba(0,0,0,0.08); }
+    body.light-mode .cert-preview-img { background: #eceae6; border-color: rgba(0,0,0,0.08); }
+    body.light-mode .cert-img-placeholder { color: rgba(0,0,0,0.1); }
+    body.light-mode .cert-preview-issuer { color: #8a6500; }
+    body.light-mode .cert-preview-year { color: rgba(0,0,0,0.3); }
+    body.light-mode .cert-preview-name { color: #1c1c1c; }
+    body.light-mode .cert-preview-link { color: #8a6500; }
+    body.light-mode .cert-list { background: #e4e2de; border-color: rgba(0,0,0,0.08); }
+    body.light-mode .cert-row { border-color: rgba(0,0,0,0.08); }
+    body.light-mode .cert-row:hover { background: #d8d6d2; }
+    body.light-mode .cert-row.active-row { background: rgba(0,0,0,0.03); }
+    body.light-mode .cert-row::before { background: #8a6500; }
+    body.light-mode .cert-row-num { color: rgba(0,0,0,0.1); }
+    body.light-mode .cert-row-issuer { color: #999; }
+    body.light-mode .cert-row-name { color: #1c1c1c; }
+    body.light-mode .cert-row:hover .cert-row-name,
+    body.light-mode .cert-row.active-row .cert-row-name { color: #8a6500; }
+    body.light-mode .cert-row-arrow { border-color: rgba(0,0,0,0.12); color: #888; }
+    body.light-mode .cert-row:hover .cert-row-arrow { border-color: #8a6500; color: #8a6500; }
+    body.light-mode .cert-nav-btn { border-color: rgba(0,0,0,0.12); color: #888; }
+    body.light-mode .cert-nav-btn:hover { border-color: #8a6500; color: #1c1c1c; }
+    body.light-mode .cert-nav-counter { color: #888; }
+    body.light-mode .cert-nav-counter strong { color: #1c1c1c; }
 
 
     /* CAPABILITIES */
@@ -1193,43 +1377,294 @@
     <div class="section-block">
       <div class="section-block-header">
         <h2 class="section-block-title">Certifications</h2>
-        <span class="section-count">06 Certs</span>
+        <span class="section-count" id="certCount">20 Certs</span>
       </div>
-      <div class="cert-grid">
-        <a href="#" class="cert-item" target="_blank">
-          <div class="cert-issuer">CompTIA</div>
-          <div class="cert-name">IT Fundamentals (ITF+)</div>
-          <div class="cert-link">View Certificate ↗</div>
-        </a>
-        <a href="#" class="cert-item" target="_blank">
-          <div class="cert-issuer">HubSpot</div>
-          <div class="cert-name">Digital Marketing Certification</div>
-          <div class="cert-link">View Certificate ↗</div>
-        </a>
-        <a href="#" class="cert-item" target="_blank">
-          <div class="cert-issuer">HubSpot</div>
-          <div class="cert-name">Content Marketing Certification</div>
-          <div class="cert-link">View Certificate ↗</div>
-        </a>
-        <a href="#" class="cert-item" target="_blank">
-          <div class="cert-issuer">freeCodeCamp</div>
-          <div class="cert-name">Responsive Web Design</div>
-          <div class="cert-link">View Certificate ↗</div>
-        </a>
-        <a href="#" class="cert-item" target="_blank">
-          <div class="cert-issuer">freeCodeCamp</div>
-          <div class="cert-name">JavaScript Algorithms & Data Structures</div>
-          <div class="cert-link">View Certificate ↗</div>
-        </a>
-        <a href="#" class="cert-item" target="_blank">
-          <div class="cert-issuer">Simplilearn</div>
-          <div class="cert-name">Full Stack Web Development</div>
-          <div class="cert-link">View Certificate ↗</div>
-        </a>
-      </div>
-    </div>
 
-  </div>
+      <!-- Issuer Tabs -->
+      <div class="cert-tabs" id="certTabs">
+        <button class="cert-tab active" data-issuer="comptia">
+          <svg class="cert-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          CompTIA
+        </button>
+        <button class="cert-tab" data-issuer="simplilearn">
+          <svg class="cert-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Simplilearn
+        </button>
+        <button class="cert-tab" data-issuer="hubspot">
+          <svg class="cert-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12l2 2 4-4"/></svg>
+          HubSpot
+        </button>
+        <button class="cert-tab" data-issuer="cisco">
+          <svg class="cert-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="4" height="8" rx="1"/><rect x="7" y="5" width="4" height="14" rx="1"/><rect x="12" y="3" width="4" height="18" rx="1"/><rect x="17" y="5" width="4" height="14" rx="1"/></svg>
+          Cisco
+        </button>
+        <button class="cert-tab" data-issuer="freecodecamp">
+          <svg class="cert-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          freeCodeCamp
+        </button>
+        <button class="cert-tab" data-issuer="skillshop">
+          <svg class="cert-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M12 22V12M3.27 6.96L12 12l8.73-5.04"/></svg>
+          Skillshop
+        </button>
+      </div>
+
+      <!-- ── CompTIA Panel ── -->
+      <div class="cert-panel active" id="panel-comptia">
+        <div class="cert-preview-card" id="preview-comptia">
+          <div class="cert-preview-img">
+            <img src="images/certs/comptia.png" alt="CompTIA IT Fundamentals (ITF+)" onload="this.classList.add('loaded')" />
+            <div class="cert-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>Certificate Preview</span>
+            </div>
+          </div>
+          <div class="cert-preview-details">
+            <div class="cert-preview-issuer">CompTIA</div>
+            <div class="cert-preview-year">2023</div>
+            <div class="cert-preview-name">CompTIA IT Fundamentals (ITF+)</div>
+            <a href="https://www.credly.com/badges/751b76d8-59a9-4316-bb9e-c15dbb74ebd0/public_url" target="_blank" class="cert-preview-link">View Certificate <span class="cert-preview-link-arrow"></span></a>
+          </div>
+        </div>
+        <div class="cert-list">
+          <div class="cert-row active-row" data-img="images/certs/comptia.png" data-name="CompTIA IT Fundamentals (ITF+)" data-year="2023" data-link="https://www.credly.com/badges/751b76d8-59a9-4316-bb9e-c15dbb74ebd0/public_url">
+            <span class="cert-row-num">01</span><span class="cert-row-issuer">CompTIA</span>
+            <span class="cert-row-name">CompTIA IT Fundamentals (ITF+)</span>
+            <a href="https://www.credly.com/badges/751b76d8-59a9-4316-bb9e-c15dbb74ebd0/public_url" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+        </div>
+        <div class="cert-nav">
+          <button class="cert-nav-btn" id="prev-comptia" disabled>‹</button>
+          <button class="cert-nav-btn" id="next-comptia" disabled>›</button>
+          <span class="cert-nav-counter"><strong>01</strong> / 01</span>
+        </div>
+      </div>
+
+      <!-- ── Simplilearn Panel ── -->
+      <div class="cert-panel" id="panel-simplilearn">
+        <div class="cert-preview-card" id="preview-simplilearn">
+          <div class="cert-preview-img">
+            <img src="images/certs/design_thinking.png" alt="Design Thinking for Beginners" onload="this.classList.add('loaded')" />
+            <div class="cert-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>Certificate Preview</span>
+            </div>
+          </div>
+          <div class="cert-preview-details">
+            <div class="cert-preview-issuer">Simplilearn</div>
+            <div class="cert-preview-year">July 2025</div>
+            <div class="cert-preview-name">Design Thinking for Beginners</div>
+            <a href="https://simpli-web.app.link/e/WvKmIgyND1b" target="_blank" class="cert-preview-link">View Certificate <span class="cert-preview-link-arrow"></span></a>
+          </div>
+        </div>
+        <div class="cert-list">
+          <div class="cert-row active-row" data-img="images/certs/design_thinking.png" data-name="Design Thinking for Beginners" data-year="July 2025" data-link="https://simpli-web.app.link/e/WvKmIgyND1b">
+            <span class="cert-row-num">01</span><span class="cert-row-issuer">Simplilearn</span>
+            <span class="cert-row-name">Design Thinking for Beginners</span>
+            <a href="https://simpli-web.app.link/e/WvKmIgyND1b" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/introduction_figma.png" data-name="Introduction to Figma" data-year="2025" data-link="https://simpli-web.app.link/e/OlIhNoMND1b">
+            <span class="cert-row-num">02</span><span class="cert-row-issuer">Simplilearn</span>
+            <span class="cert-row-name">Introduction to Figma</span>
+            <a href="https://simpli-web.app.link/e/OlIhNoMND1b" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/introduction_php.png" data-name="Introduction to PHP" data-year="2025" data-link="https://simpli-web.app.link/e/cQfVYtQND1b">
+            <span class="cert-row-num">03</span><span class="cert-row-issuer">Simplilearn</span>
+            <span class="cert-row-name">Introduction to PHP</span>
+            <a href="https://simpli-web.app.link/e/cQfVYtQND1b" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/ui_ux_basics.png" data-name="UI/UX Basics" data-year="August 2025" data-link="https://simpli-web.app.link/e/znp09hDND1b">
+            <span class="cert-row-num">04</span><span class="cert-row-issuer">Simplilearn</span>
+            <span class="cert-row-name">UI/UX Basics</span>
+            <a href="https://simpli-web.app.link/e/znp09hDND1b" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/ui_ux_chatgpt.png" data-name="Website UI/UX Designing using ChatGPT" data-year="July 2025" data-link="https://simpli-web.app.link/e/3SQJ4BIND1b">
+            <span class="cert-row-num">05</span><span class="cert-row-issuer">Simplilearn</span>
+            <span class="cert-row-name">Website UI/UX Designing using ChatGPT</span>
+            <a href="https://simpli-web.app.link/e/3SQJ4BIND1b" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+        </div>
+        <div class="cert-nav">
+          <button class="cert-nav-btn" id="prev-simplilearn" disabled>‹</button>
+          <button class="cert-nav-btn" id="next-simplilearn">›</button>
+          <span class="cert-nav-counter"><strong>01</strong> / 05</span>
+        </div>
+      </div>
+
+      <!-- ── HubSpot Panel ── -->
+      <div class="cert-panel" id="panel-hubspot">
+        <div class="cert-preview-card" id="preview-hubspot">
+          <div class="cert-preview-img">
+            <img src="images/certs/content_marketing.png" alt="Content Marketing" onload="this.classList.add('loaded')" />
+            <div class="cert-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>Certificate Preview</span>
+            </div>
+          </div>
+          <div class="cert-preview-details">
+            <div class="cert-preview-issuer">HubSpot</div>
+            <div class="cert-preview-year">August 2025</div>
+            <div class="cert-preview-name">Content Marketing</div>
+            <a href="https://app-na2.hubspot.com/academy/achievements/jr9yqcjb/en/1/kurt-justine-sicat/content-marketing" target="_blank" class="cert-preview-link">View Certificate <span class="cert-preview-link-arrow"></span></a>
+          </div>
+        </div>
+        <div class="cert-list">
+          <div class="cert-row active-row" data-img="images/certs/content_marketing.png" data-name="Content Marketing" data-year="August 2025" data-link="https://app-na2.hubspot.com/academy/achievements/jr9yqcjb/en/1/kurt-justine-sicat/content-marketing">
+            <span class="cert-row-num">01</span><span class="cert-row-issuer">HubSpot</span>
+            <span class="cert-row-name">Content Marketing</span>
+            <a href="https://app-na2.hubspot.com/academy/achievements/jr9yqcjb/en/1/kurt-justine-sicat/content-marketing" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/digital_advertising.png" data-name="Digital Advertising" data-year="August 2025" data-link="https://app-na2.hubspot.com/academy/achievements/wl5x21xy/en/1/kurt-justine-sicat/digital-advertising">
+            <span class="cert-row-num">02</span><span class="cert-row-issuer">HubSpot</span>
+            <span class="cert-row-name">Digital Advertising</span>
+            <a href="https://app-na2.hubspot.com/academy/achievements/wl5x21xy/en/1/kurt-justine-sicat/digital-advertising" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/digital_marketing.png" data-name="Digital Marketing" data-year="August 2025" data-link="https://app-na2.hubspot.com/academy/achievements/5f9vmmny/en/1/kurt-justine-sicat/digital-marketing">
+            <span class="cert-row-num">03</span><span class="cert-row-issuer">HubSpot</span>
+            <span class="cert-row-name">Digital Marketing</span>
+            <a href="https://app-na2.hubspot.com/academy/achievements/5f9vmmny/en/1/kurt-justine-sicat/digital-marketing" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/SEO.png" data-name="SEO" data-year="August 2025" data-link="https://app-na2.hubspot.com/academy/achievements/g3wgtvxv/en/1/kurt-justine-sicat/seo">
+            <span class="cert-row-num">04</span><span class="cert-row-issuer">HubSpot</span>
+            <span class="cert-row-name">SEO</span>
+            <a href="https://app-na2.hubspot.com/academy/achievements/g3wgtvxv/en/1/kurt-justine-sicat/seo" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/SEO_2.png" data-name="SEO II" data-year="August 2025" data-link="https://app-na2.hubspot.com/academy/achievements/jw9g6kf9/en/1/kurt-justine-sicat/seo-ii">
+            <span class="cert-row-num">05</span><span class="cert-row-issuer">HubSpot</span>
+            <span class="cert-row-name">SEO II</span>
+            <a href="https://app-na2.hubspot.com/academy/achievements/jw9g6kf9/en/1/kurt-justine-sicat/seo-ii" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+        </div>
+        <div class="cert-nav">
+          <button class="cert-nav-btn" id="prev-hubspot" disabled>‹</button>
+          <button class="cert-nav-btn" id="next-hubspot">›</button>
+          <span class="cert-nav-counter"><strong>01</strong> / 05</span>
+        </div>
+      </div>
+
+      <!-- ── Cisco Panel ── -->
+      <div class="cert-panel" id="panel-cisco">
+        <div class="cert-preview-card" id="preview-cisco">
+          <div class="cert-preview-img">
+            <img src="images/certs/javascript_essential.png" alt="JavaScript Essentials 1" onload="this.classList.add('loaded')" />
+            <div class="cert-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>Certificate Preview</span>
+            </div>
+          </div>
+          <div class="cert-preview-details">
+            <div class="cert-preview-issuer">Cisco</div>
+            <div class="cert-preview-year">October 2024</div>
+            <div class="cert-preview-name">JavaScript Essentials 1</div>
+            <a href="https://www.credly.com/badges/6a63466f-8449-43de-a799-4c1523d3cc29/public_url" target="_blank" class="cert-preview-link">View Certificate <span class="cert-preview-link-arrow"></span></a>
+          </div>
+        </div>
+        <div class="cert-list">
+          <div class="cert-row active-row" data-img="images/certs/javascript_essential.png" data-name="JavaScript Essentials 1" data-year="October 2024" data-link="https://www.credly.com/badges/6a63466f-8449-43de-a799-4c1523d3cc29/public_url">
+            <span class="cert-row-num">01</span><span class="cert-row-issuer">Cisco</span>
+            <span class="cert-row-name">JavaScript Essentials 1</span>
+            <a href="https://www.credly.com/badges/6a63466f-8449-43de-a799-4c1523d3cc29/public_url" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+        </div>
+        <div class="cert-nav">
+          <button class="cert-nav-btn" id="prev-cisco" disabled>‹</button>
+          <button class="cert-nav-btn" id="next-cisco" disabled>›</button>
+          <span class="cert-nav-counter"><strong>01</strong> / 01</span>
+        </div>
+      </div>
+
+      <!-- ── freeCodeCamp Panel ── -->
+      <div class="cert-panel" id="panel-freecodecamp">
+        <div class="cert-preview-card" id="preview-freecodecamp">
+          <div class="cert-preview-img">
+            <img src="images/certs/api_V8.png" alt="Back End Development and APIs V8" onload="this.classList.add('loaded')" />
+            <div class="cert-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>Certificate Preview</span>
+            </div>
+          </div>
+          <div class="cert-preview-details">
+            <div class="cert-preview-issuer">freeCodeCamp</div>
+            <div class="cert-preview-year">September 2025</div>
+            <div class="cert-preview-name">Back End Development and APIs V8</div>
+            <a href="https://www.freecodecamp.org/certification/kurtjustinesicat/back-end-development-and-apis" target="_blank" class="cert-preview-link">View Certificate <span class="cert-preview-link-arrow"></span></a>
+          </div>
+        </div>
+        <div class="cert-list">
+          <div class="cert-row active-row" data-img="images/certs/api_V8.png" data-name="Back End Development and APIs V8" data-year="September 2025" data-link="https://www.freecodecamp.org/certification/kurtjustinesicat/back-end-development-and-apis">
+            <span class="cert-row-num">01</span><span class="cert-row-issuer">freeCodeCamp</span>
+            <span class="cert-row-name">Back End Development and APIs V8</span>
+            <a href="https://www.freecodecamp.org/certification/kurtjustinesicat/back-end-development-and-apis" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/V7.png" data-name="Legacy JavaScript Algorithms and Data Structures V7" data-year="September 2025" data-link="https://www.freecodecamp.org/certification/kurtjustinesicat/javascript-algorithms-and-data-structures">
+            <span class="cert-row-num">02</span><span class="cert-row-issuer">freeCodeCamp</span>
+            <span class="cert-row-name">Legacy JavaScript Algorithms and Data Structures V7</span>
+            <a href="https://www.freecodecamp.org/certification/kurtjustinesicat/javascript-algorithms-and-data-structures" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/web_V8.png" data-name="Legacy Responsive Web Design V8" data-year="September 2025" data-link="https://www.freecodecamp.org/certification/kurtjustinesicat/responsive-web-design">
+            <span class="cert-row-num">03</span><span class="cert-row-issuer">freeCodeCamp</span>
+            <span class="cert-row-name">Legacy Responsive Web Design V8</span>
+            <a href="https://www.freecodecamp.org/certification/kurtjustinesicat/responsive-web-design" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+        </div>
+        <div class="cert-nav">
+          <button class="cert-nav-btn" id="prev-freecodecamp" disabled>‹</button>
+          <button class="cert-nav-btn" id="next-freecodecamp">›</button>
+          <span class="cert-nav-counter"><strong>01</strong> / 03</span>
+        </div>
+      </div>
+
+      <!-- ── Skillshop Panel ── -->
+      <div class="cert-panel" id="panel-skillshop">
+        <div class="cert-preview-card" id="preview-skillshop">
+          <div class="cert-preview-img">
+            <img src="images/certs/GA4.png" alt="Dive Deeper Into GA4 Data and Reports" onload="this.classList.add('loaded')" />
+            <div class="cert-img-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <span>Certificate Preview</span>
+            </div>
+          </div>
+          <div class="cert-preview-details">
+            <div class="cert-preview-issuer">Google Skillshop</div>
+            <div class="cert-preview-year">March 2026</div>
+            <div class="cert-preview-name">Dive Deeper Into GA4 Data and Reports</div>
+            <a href="https://skillshop.credential.net/0bce6438-132e-43ca-b817-6d6add9379d9#acc.qop71vuE" target="_blank" class="cert-preview-link">View Certificate <span class="cert-preview-link-arrow"></span></a>
+          </div>
+        </div>
+        <div class="cert-list">
+          <div class="cert-row active-row" data-img="images/certs/GA4.png" data-name="Dive Deeper Into GA4 Data and Reports" data-year="March 2026" data-link="https://skillshop.credential.net/0bce6438-132e-43ca-b817-6d6add9379d9#acc.qop71vuE">
+            <span class="cert-row-num">01</span><span class="cert-row-issuer">Skillshop</span>
+            <span class="cert-row-name">Dive Deeper Into GA4 Data and Reports</span>
+            <a href="https://skillshop.credential.net/0bce6438-132e-43ca-b817-6d6add9379d9#acc.qop71vuE" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/get_started_google_analytics.png" data-name="Get Started using Google Analytics" data-year="March 2026" data-link="https://skillshop.credential.net/b78f5de0-5861-4142-b054-b918af8a236f#acc.bhgyWirq">
+            <span class="cert-row-num">02</span><span class="cert-row-issuer">Skillshop</span>
+            <span class="cert-row-name">Get Started using Google Analytics</span>
+            <a href="https://skillshop.credential.net/b78f5de0-5861-4142-b054-b918af8a236f#acc.bhgyWirq" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/google_analytics_certification.png" data-name="Google Analytics Certification" data-year="March 2026" data-link="https://skillshop.credential.net/f2100041-314d-4e80-af8b-ffc7f43c75dc#acc.es2IYk5p">
+            <span class="cert-row-num">03</span><span class="cert-row-issuer">Skillshop</span>
+            <span class="cert-row-name">Google Analytics Certification</span>
+            <a href="https://skillshop.credential.net/f2100041-314d-4e80-af8b-ffc7f43c75dc#acc.es2IYk5p" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/read_reports.png" data-name="Manage GA4 Data and Learn to Read Reports" data-year="March 2026" data-link="https://skillshop.credential.net/62b3e98c-59c0-410d-ad68-3c6192456ae1#acc.gG8tcEu5">
+            <span class="cert-row-num">04</span><span class="cert-row-issuer">Skillshop</span>
+            <span class="cert-row-name">Manage GA4 Data and Learn to Read Reports</span>
+            <a href="https://skillshop.credential.net/62b3e98c-59c0-410d-ad68-3c6192456ae1#acc.gG8tcEu5" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+          <div class="cert-row" data-img="images/certs/data_sources.png" data-name="Use GA4 with Other Tools and Data Sources" data-year="March 2026" data-link="https://skillshop.credential.net/e4cf2652-e9f3-45f4-a559-205c4a47ff25#acc.4QmYkzR8">
+            <span class="cert-row-num">05</span><span class="cert-row-issuer">Skillshop</span>
+            <span class="cert-row-name">Use GA4 with Other Tools and Data Sources</span>
+            <a href="https://skillshop.credential.net/e4cf2652-e9f3-45f4-a559-205c4a47ff25#acc.4QmYkzR8" target="_blank" class="cert-row-arrow">↗</a>
+          </div>
+        </div>
+        <div class="cert-nav">
+          <button class="cert-nav-btn" id="prev-skillshop" disabled>‹</button>
+          <button class="cert-nav-btn" id="next-skillshop">›</button>
+          <span class="cert-nav-counter"><strong>01</strong> / 05</span>
+        </div>
+      </div>
+
+    </div>
 
   <!-- FOOTER -->
   <footer>
@@ -1360,11 +1795,8 @@
     }, { threshold: 0.2 });
     document.querySelectorAll('.cap-col').forEach(col => barObs.observe(col));
 
-    // ── STAGGER CHILDREN ──
+    // ── STAGGER CHILDREN (skills only now) ──
     document.querySelectorAll('.skills-grid .skill-item').forEach((el, i) => {
-      el.classList.add('stagger-child'); el.style.setProperty('--i', i);
-    });
-    document.querySelectorAll('.cert-grid .cert-item').forEach((el, i) => {
       el.classList.add('stagger-child'); el.style.setProperty('--i', i);
     });
     const staggerObs = new IntersectionObserver(entries => {
@@ -1374,7 +1806,117 @@
         }
       });
     }, { threshold: 0.08 });
-    document.querySelectorAll('.skills-grid, .cert-grid').forEach(g => staggerObs.observe(g));
+    document.querySelectorAll('.skills-grid').forEach(g => staggerObs.observe(g));
+
+    // ══════════════════════════════════════
+    // CERTIFICATIONS — Tabs + Preview + Nav
+    // ══════════════════════════════════════
+    (function() {
+      const tabs = document.querySelectorAll('.cert-tab');
+      const panels = document.querySelectorAll('.cert-panel');
+
+      // Tab switching
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+          tab.classList.add('active');
+          const panel = document.getElementById('panel-' + tab.dataset.issuer);
+          if (panel) panel.classList.add('active');
+        });
+      });
+
+      // Per-panel prev/next + row-click logic
+      document.querySelectorAll('.cert-panel').forEach(panel => {
+        const issuerId = panel.id.replace('panel-', '');
+        const preview  = document.getElementById('preview-' + issuerId);
+        const rows     = Array.from(panel.querySelectorAll('.cert-row'));
+        const prevBtn  = document.getElementById('prev-' + issuerId);
+        const nextBtn  = document.getElementById('next-' + issuerId);
+        const counter  = panel.querySelector('.cert-nav-counter');
+        if (!preview || !rows.length) return;
+
+        let current = 0;
+
+        function updatePreview(index, animate) {
+          const row = rows[index];
+          if (!row) return;
+
+          const img     = row.dataset.img;
+          const name    = row.dataset.name;
+          const year    = row.dataset.year;
+          const link    = row.dataset.link;
+          const issuer  = row.querySelector('.cert-row-issuer')?.textContent || '';
+
+          // Highlight active row
+          rows.forEach(r => r.classList.remove('active-row'));
+          row.classList.add('active-row');
+
+          // Fade transition
+          if (animate) preview.classList.add('fading');
+
+          setTimeout(() => {
+            // Update image
+            const imgEl = preview.querySelector('.cert-preview-img img');
+            if (imgEl) {
+              imgEl.classList.remove('loaded');
+              imgEl.src = img || '';
+              if (img) {
+                imgEl.onload = () => imgEl.classList.add('loaded');
+                imgEl.onerror = () => {};
+              }
+            }
+            // Update text
+            const nameEl   = preview.querySelector('.cert-preview-name');
+            const yearEl   = preview.querySelector('.cert-preview-year');
+            const linkEl   = preview.querySelector('.cert-preview-link');
+            const issuerEl = preview.querySelector('.cert-preview-issuer');
+            if (nameEl)   nameEl.textContent   = name;
+            if (yearEl)   yearEl.textContent   = year;
+            if (issuerEl) issuerEl.textContent = issuer;
+            if (linkEl) {
+              linkEl.href = link;
+              // preserve the arrow span
+              const arrow = linkEl.querySelector('.cert-preview-link-arrow');
+              linkEl.innerHTML = '';
+              linkEl.appendChild(document.createTextNode('View Certificate '));
+              const arrowSpan = document.createElement('span');
+              arrowSpan.className = 'cert-preview-link-arrow';
+              linkEl.appendChild(arrowSpan);
+            }
+            if (animate) preview.classList.remove('fading');
+          }, animate ? 220 : 0);
+
+          // Counter
+          if (counter) counter.innerHTML = `<strong>${String(index + 1).padStart(2,'0')}</strong> / ${String(rows.length).padStart(2,'0')}`;
+
+          // Button states
+          if (prevBtn) prevBtn.disabled = index === 0;
+          if (nextBtn) nextBtn.disabled = index === rows.length - 1;
+        }
+
+        // Row click
+        rows.forEach((row, i) => {
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return; // let arrow link open
+            current = i;
+            updatePreview(current, true);
+          });
+        });
+
+        // Prev / Next
+        if (prevBtn) prevBtn.addEventListener('click', () => { if (current > 0) { current--; updatePreview(current, true); }});
+        if (nextBtn) nextBtn.addEventListener('click', () => { if (current < rows.length - 1) { current++; updatePreview(current, true); }});
+
+        // Init
+        updatePreview(0, false);
+      });
+
+      // Total cert count in header
+      const total = document.querySelectorAll('.cert-row').length;
+      const countEl = document.getElementById('certCount');
+      if (countEl) countEl.textContent = String(total).padStart(2,'0') + ' Certs';
+    })();
 
     // ── GENERAL SCROLL REVEAL ──
     const obs = new IntersectionObserver(entries => {
