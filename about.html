@@ -87,13 +87,13 @@
       position: relative;
     }
 
-    /* LEFT — Large Photo */
+    /* LEFT — Photo Deck */
     .about-photo-col {
       position: relative;
       height: 100vh;
       display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
+      align-items: center;
+      justify-content: center;
     }
     .about-photo-wrap {
       width: 100%;
@@ -101,13 +101,96 @@
       position: absolute;
       bottom: 0; left: 0;
       opacity: 0; animation: fadeIn 1s ease 0.3s forwards;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .about-photo-wrap img {
+
+    /* ── Photo Deck ── */
+    .photo-deck {
+      position: relative;
+      width: 400px; height: 520px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .photo-card {
+      position: absolute; inset: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.6),
+        0 2px 8px rgba(0,0,0,0.4);
+      transform-origin: bottom center;
+      transition:
+        transform 0.55s cubic-bezier(0.34,1.2,0.64,1),
+        box-shadow 0.4s ease,
+        z-index 0s;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .photo-card img {
       width: 100%; height: 100%;
-      object-fit: contain; object-position: bottom left;
+      object-fit: cover; object-position: center top;
       display: block;
-      filter: drop-shadow(40px 0 80px rgba(0,0,0,0.9));
+      pointer-events: none;
+      transition: filter 0.4s ease;
     }
+    /* shimmer on non-front cards */
+    .photo-card:not(.front) img {
+      filter: brightness(0.7);
+    }
+    /* hover — spread the deck */
+    .photo-deck:hover .photo-card:nth-child(2) { transform: var(--rot2) translateY(-6px); }
+    .photo-deck:hover .photo-card:nth-child(3) { transform: var(--rot3) translateY(-10px); }
+    .photo-deck:hover .photo-card:nth-child(4) { transform: var(--rot4) translateY(-14px); }
+    .photo-deck:hover .photo-card:nth-child(5) { transform: var(--rot5) translateY(-18px); }
+
+    /* click flash */
+    .photo-card.flipping {
+      transition: transform 0.18s ease-in, opacity 0.18s ease-in !important;
+      transform: scale(0.94) translateY(10px) !important;
+      opacity: 0.3;
+    }
+
+    /* dot indicators */
+    .photo-deck-dots {
+      position: absolute;
+      bottom: -28px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 6px;
+    }
+    .photo-deck-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(192,192,192,0.3);
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .photo-deck-dot.active {
+      background: rgba(192,192,192,0.9);
+      transform: scale(1.3);
+    }
+
+    /* corner label */
+    .photo-deck-label {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-family: "Space Mono", monospace;
+      font-size: 8px; letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.3s;
+    }
+
+    /* light mode overrides */
+    body.light-mode .photo-card {
+      border-color: rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.1);
+    }
+    body.light-mode .photo-deck-dot { background: rgba(0,0,0,0.2); }
+    body.light-mode .photo-deck-dot.active { background: rgba(0,0,0,0.7); }
+    body.light-mode .photo-deck-label { color: rgba(0,0,0,0.35); }
 
     /* RIGHT — Info */
     .about-info-col {
@@ -261,22 +344,22 @@
       font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 8px;
     }
     .edu-card-degree {
-      font-size: 12px; color: var(--gray); line-height: 1.6; margin-bottom: 16px;
+      font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 16px;
     }
     .edu-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
     .edu-card-tag {
       font-family: 'Space Mono', monospace;
-      font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--gray); border: 1px solid var(--line); padding: 4px 10px;
     }
     .edu-card-detail { border-top: 1px solid var(--line); padding-top: 16px; }
     .edu-card-detail-row { margin-bottom: 10px; }
     .edu-detail-year {
       font-family: 'Space Mono', monospace;
-      font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
       color: var(--accent); display: block; margin-bottom: 4px;
     }
-    .edu-detail-note { font-size: 11px; color: var(--gray); line-height: 1.6; }
+    .edu-detail-note { font-size: 12px; color: var(--gray); line-height: 1.6; }
     .edu-card-meta {
       display: flex; flex-wrap: wrap; gap: 16px;
       margin-top: 16px; padding-top: 16px;
@@ -284,7 +367,7 @@
     }
     .edu-meta-item {
       font-family: 'Space Mono', monospace;
-      font-size: 9px; letter-spacing: 0.1em;
+      font-size: 10px; letter-spacing: 0.1em;
       color: rgba(122,122,122,0.7);
     }
 
@@ -387,6 +470,7 @@
       background: rgba(244,244,240,0.02);
       display: flex; align-items: center; justify-content: center;
       border-right: 1px solid var(--line);
+      cursor: pointer;
     }
     .cert-preview-img img {
       width: 100%; height: 100%; object-fit: contain;
@@ -395,7 +479,7 @@
       opacity: 0;
     }
     .cert-preview-img img.loaded { opacity: 1; }
-    .cert-preview-img img:hover { transform: scale(1.02); }
+    .cert-preview-img img:hover { transform: scale(1.04); }
     .cert-img-placeholder {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -407,6 +491,222 @@
       font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
     }
     .cert-preview-img img.loaded ~ .cert-img-placeholder { display: none; }
+    /* ── Inspect Overlay ── */
+    .cert-inspect-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; z-index: 3;
+    }
+    .cert-inspect-overlay .overlay-panel-left,
+    .cert-inspect-overlay .overlay-panel-right {
+      position: absolute; top: 0; bottom: 0; width: 50%;
+      background: rgba(8,8,8,0.82);
+      backdrop-filter: blur(2px);
+      transition: transform 0.45s cubic-bezier(0.77,0,0.18,1);
+    }
+    .cert-inspect-overlay .overlay-panel-left  { left: 0;   transform: translateX(-100%); }
+    .cert-inspect-overlay .overlay-panel-right { right: 0;  transform: translateX(100%); }
+    .cert-preview-img:hover .overlay-panel-left  { transform: translateX(0); }
+    .cert-preview-img:hover .overlay-panel-right { transform: translateX(0); }
+
+    .cert-inspect-overlay .inspect-core {
+      position: relative; z-index: 4;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      opacity: 0; transform: scale(0.7) rotate(-8deg);
+      transition: opacity 0.3s 0.25s ease, transform 0.4s 0.22s cubic-bezier(0.34,1.56,0.64,1);
+      cursor: pointer;
+      pointer-events: all;
+    }
+    .cert-preview-img:hover .inspect-core {
+      opacity: 1; transform: scale(1) rotate(0deg);
+    }
+    /* Diamond SVG draws itself */
+    .inspect-diamond {
+      width: 52px; height: 52px;
+    }
+    .inspect-diamond .diamond-path {
+      stroke-dasharray: 160;
+      stroke-dashoffset: 160;
+      transition: stroke-dashoffset 0.55s 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cert-preview-img:hover .diamond-path {
+      stroke-dashoffset: 0;
+    }
+    /* Inner dot pulses */
+    .inspect-diamond .diamond-dot {
+      opacity: 0;
+      transition: opacity 0.2s 0.7s ease;
+    }
+    .cert-preview-img:hover .diamond-dot { opacity: 1; }
+
+    /* INSPECT text — letters stagger in */
+    .inspect-label {
+      display: flex; gap: 2px;
+    }
+    .inspect-label span {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0; transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .cert-preview-img:hover .inspect-label span { opacity: 1; transform: translateY(0); }
+    .cert-preview-img:hover .inspect-label span:nth-child(1)  { transition-delay: 0.38s; }
+    .cert-preview-img:hover .inspect-label span:nth-child(2)  { transition-delay: 0.41s; }
+    .cert-preview-img:hover .inspect-label span:nth-child(3)  { transition-delay: 0.44s; }
+    .cert-preview-img:hover .inspect-label span:nth-child(4)  { transition-delay: 0.47s; }
+    .cert-preview-img:hover .inspect-label span:nth-child(5)  { transition-delay: 0.50s; }
+    .cert-preview-img:hover .inspect-label span:nth-child(6)  { transition-delay: 0.53s; }
+    .cert-preview-img:hover .inspect-label span:nth-child(7)  { transition-delay: 0.56s; }
+
+    /* ── Cert Lightbox ── */
+    #cert-lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      /* backdrop */
+      background: rgba(4,4,4,0);
+      backdrop-filter: blur(0px) brightness(1);
+      -webkit-backdrop-filter: blur(0px) brightness(1);
+      transition: background 0.45s ease, backdrop-filter 0.45s ease, -webkit-backdrop-filter 0.45s ease;
+    }
+    #cert-lightbox.active {
+      pointer-events: all;
+      background: rgba(4,4,4,0.78);
+      backdrop-filter: blur(18px) brightness(0.55);
+      -webkit-backdrop-filter: blur(18px) brightness(0.55);
+    }
+
+    /* vignette overlay */
+    #cert-lightbox::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+    #cert-lightbox.active::before { opacity: 1; }
+
+    /* floating image frame */
+    #cert-lightbox-inner {
+      position: relative;
+      max-width: min(820px, 88vw);
+      max-height: 86vh;
+      /* tear-out: starts from origin scale with slight tilt */
+      transform: scale(0.06) rotate(-4deg);
+      transform-origin: center center;
+      opacity: 0;
+      transition:
+        transform 0.52s cubic-bezier(0.22, 1.4, 0.36, 1),
+        opacity 0.3s ease;
+      will-change: transform, opacity;
+    }
+    #cert-lightbox.active #cert-lightbox-inner {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    /* implode on close */
+    #cert-lightbox.closing #cert-lightbox-inner {
+      transform: scale(0.04) rotate(3deg);
+      opacity: 0;
+      transition:
+        transform 0.38s cubic-bezier(0.55, 0, 1, 0.45),
+        opacity 0.25s ease;
+    }
+
+    #cert-lightbox img {
+      display: block;
+      width: 100%; height: auto; max-height: 86vh;
+      object-fit: contain;
+      border-radius: 2px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    /* silver corner ticks */
+    #cert-lightbox-inner::before,
+    #cert-lightbox-inner::after {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      border-color: rgba(192,192,192,0.7);
+      border-style: solid;
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+      transition: opacity 0.25s 0.35s ease;
+    }
+    #cert-lightbox.active #cert-lightbox-inner::before,
+    #cert-lightbox.active #cert-lightbox-inner::after { opacity: 1; }
+    /* top-left + bottom-right via pseudo, top-right + bottom-left via box-shadows */
+    #cert-lightbox-inner::before {
+      top: -6px; left: -6px;
+      border-width: 1.5px 0 0 1.5px;
+    }
+    #cert-lightbox-inner::after {
+      bottom: -6px; right: -6px;
+      border-width: 0 1.5px 1.5px 0;
+    }
+    /* extra corner ticks via a wrapper span */
+    #cert-lightbox-ticks {
+      position: absolute; inset: -6px;
+      pointer-events: none; z-index: 4;
+      opacity: 0;
+      transition: opacity 0.25s 0.35s ease;
+    }
+    #cert-lightbox.active #cert-lightbox-ticks { opacity: 1; }
+    #cert-lightbox-ticks::before,
+    #cert-lightbox-ticks::after {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      border-color: rgba(192,192,192,0.7);
+      border-style: solid;
+    }
+    #cert-lightbox-ticks::before {
+      top: 0; right: 0;
+      border-width: 1.5px 1.5px 0 0;
+    }
+    #cert-lightbox-ticks::after {
+      bottom: 0; left: 0;
+      border-width: 0 0 1.5px 1.5px;
+    }
+
+    /* crosshair close button */
+    #cert-lightbox-close {
+      position: absolute;
+      top: -22px; right: -22px;
+      width: 32px; height: 32px;
+      cursor: pointer; z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s 0.4s ease, transform 0.2s ease;
+    }
+    #cert-lightbox.active #cert-lightbox-close { opacity: 1; }
+    #cert-lightbox-close:hover { transform: rotate(90deg) scale(1.15); }
+    #cert-lightbox-close svg line {
+      stroke: rgba(192,192,192,0.85);
+      transition: stroke 0.2s ease;
+    }
+    #cert-lightbox-close:hover svg line { stroke: #fff; }
+
+    /* ── Light mode overrides ── */
+    body.light-mode #cert-lightbox.active {
+      background: rgba(180,178,172,0.72);
+      backdrop-filter: blur(18px) brightness(0.75);
+      -webkit-backdrop-filter: blur(18px) brightness(0.75);
+    }
+    body.light-mode #cert-lightbox img {
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.2);
+    }
+    body.light-mode #cert-lightbox-inner::before,
+    body.light-mode #cert-lightbox-inner::after,
+    body.light-mode #cert-lightbox-ticks::before,
+    body.light-mode #cert-lightbox-ticks::after {
+      border-color: rgba(100,80,0,0.5);
+    }
+    body.light-mode #cert-lightbox-close svg line { stroke: rgba(80,60,0,0.8); }
+    body.light-mode #cert-lightbox-close:hover svg line { stroke: #3a2e00; }
+
 
     /* Details side */
     .cert-preview-details {
@@ -527,28 +827,28 @@
     body.light-mode .cert-tab { color: #888; }
     body.light-mode .cert-tab:hover { color: #1c1c1c; }
     body.light-mode .cert-tab.active { color: #1c1c1c; }
-    body.light-mode .cert-tab::after { background: #8a6500; }
+    body.light-mode .cert-tab::after { background: #1c1c1c; }
     body.light-mode .cert-preview-card { background: #e4e2de; border-color: rgba(0,0,0,0.08); }
     body.light-mode .cert-preview-img { background: #eceae6; border-color: rgba(0,0,0,0.08); }
     body.light-mode .cert-img-placeholder { color: rgba(0,0,0,0.1); }
-    body.light-mode .cert-preview-issuer { color: #8a6500; }
+    body.light-mode .cert-preview-issuer { color: #1c1c1c; }
     body.light-mode .cert-preview-year { color: rgba(0,0,0,0.3); }
     body.light-mode .cert-preview-name { color: #1c1c1c; }
-    body.light-mode .cert-preview-link { color: #8a6500; }
+    body.light-mode .cert-preview-link { color: #1c1c1c; }
     body.light-mode .cert-list { background: #e4e2de; border-color: rgba(0,0,0,0.08); }
     body.light-mode .cert-row { border-color: rgba(0,0,0,0.08); }
     body.light-mode .cert-row:hover { background: #d8d6d2; }
     body.light-mode .cert-row.active-row { background: rgba(0,0,0,0.03); }
-    body.light-mode .cert-row::before { background: #8a6500; }
+    body.light-mode .cert-row::before { background: #1c1c1c; }
     body.light-mode .cert-row-num { color: rgba(0,0,0,0.1); }
     body.light-mode .cert-row-issuer { color: #999; }
     body.light-mode .cert-row-name { color: #1c1c1c; }
     body.light-mode .cert-row:hover .cert-row-name,
-    body.light-mode .cert-row.active-row .cert-row-name { color: #8a6500; }
+    body.light-mode .cert-row.active-row .cert-row-name { color: #1c1c1c; }
     body.light-mode .cert-row-arrow { border-color: rgba(0,0,0,0.12); color: #888; }
-    body.light-mode .cert-row:hover .cert-row-arrow { border-color: #8a6500; color: #8a6500; }
+    body.light-mode .cert-row:hover .cert-row-arrow { border-color: #1c1c1c; color: #1c1c1c; }
     body.light-mode .cert-nav-btn { border-color: rgba(0,0,0,0.12); color: #888; }
-    body.light-mode .cert-nav-btn:hover { border-color: #8a6500; color: #1c1c1c; }
+    body.light-mode .cert-nav-btn:hover { border-color: #1c1c1c; color: #1c1c1c; }
     body.light-mode .cert-nav-counter { color: #888; }
     body.light-mode .cert-nav-counter strong { color: #1c1c1c; }
 
@@ -730,35 +1030,170 @@
     @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
-    /* RESPONSIVE — Tablet */
-    @media (max-width: 960px) {
-      .nav-inner { padding: 22px 28px; }
-      .nav-links { gap: 18px; }
-      .about-hero { grid-template-columns: 1fr; min-height: auto; }
-      .about-photo-col { height: 60vw; }
-      .about-photo-wrap { position: relative; height: 100%; }
-      .about-info-col { padding: 40px 28px 60px; }
-      .sections-wrap { padding: 0 28px 80px; }
-      .skills-grid { grid-template-columns: repeat(2, 1fr); }
-      .edu-cards { grid-template-columns: 1fr; }
-      .exp-item { grid-template-columns: 1fr; gap: 8px; padding: 32px 28px; min-height: auto; }
-      .cap-grid { grid-template-columns: 1fr; gap: 40px; }
-      .cert-grid { grid-template-columns: repeat(2, 1fr); }
-      .footer-inner { padding: 22px 28px; flex-direction: column; gap: 14px; text-align: center; }
+    /* ═══════════════════════════════════
+       RESPONSIVE — Tablet (≤1024px)
+    ═══════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .nav-inner { padding: 24px 32px; }
+      .about-info-col { padding: 120px 40px 60px 32px; }
+      .photo-deck { width: 340px; height: 440px; }
     }
-    /* RESPONSIVE — Mobile */
-    @media (max-width: 560px) {
-      .nav-links { gap: 12px; }
-      .nav-links a { font-size: 9px; }
-      .about-photo-col { height: 80vw; }
-      .about-name { font-size: 44px; }
-      .about-stats { grid-template-columns: repeat(2, 1fr); }
-      .about-bio { font-size: 13px; }
-      .skills-grid { grid-template-columns: 1fr; }
-      .cert-grid { grid-template-columns: 1fr; }
-      .section-block { padding: 52px 0; }
-      .exp-item { padding: 24px 20px; }
+
+    /* ═══════════════════════════════════
+       RESPONSIVE — Tablet (≤860px)
+    ═══════════════════════════════════ */
+    @media (max-width: 860px) {
+      /* Nav */
+      .nav-inner { padding: 20px 24px; }
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 9px; letter-spacing: 0.12em; }
+
+      /* Hero — stack vertically */
+      .about-hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 80px;
+      }
+      .about-photo-col {
+        height: auto;
+        min-height: 0;
+        padding: 48px 24px 0;
+        justify-content: center;
+        align-items: center;
+      }
+      .about-photo-wrap {
+        position: relative;
+        height: auto;
+        bottom: auto; left: auto;
+        display: flex;
+        justify-content: center;
+      }
+      .photo-deck { width: 280px; height: 360px; }
+      .about-info-col {
+        padding: 60px 24px 60px;
+        align-items: flex-start;
+      }
+      .about-name { font-size: clamp(42px, 10vw, 72px); }
+      .about-stats { grid-template-columns: repeat(3, 1fr); gap: 0; }
+
+      /* Sections */
+      .sections-wrap { padding: 0 24px 80px; }
+      .section-block { padding: 56px 0; }
+      .section-block-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+
+      /* Skills */
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Education */
+      .edu-cards { grid-template-columns: 1fr; }
+
+      /* Experience */
+      .exp-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 32px 24px;
+        min-height: auto;
+      }
+      .exp-photo { display: none; }
+
+      /* Capabilities */
+      .cap-grid { grid-template-columns: 1fr; gap: 40px; }
+
+      /* Certifications */
+      .cert-tabs { flex-wrap: wrap; gap: 0; }
+      .cert-tab { font-size: 8px; padding: 12px 14px; }
+      .cert-preview-card { grid-template-columns: 1fr; }
+      .cert-preview-img {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        min-height: 200px;
+      }
+      .cert-preview-details { padding: 24px 28px; }
+      .cert-row { padding: 14px 16px; }
+
+      /* Footer */
+      .footer-inner { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
       .footer-links { flex-wrap: wrap; justify-content: center; gap: 14px; }
+    }
+
+    /* ═══════════════════════════════════
+       RESPONSIVE — Mobile (≤560px)
+    ═══════════════════════════════════ */
+    @media (max-width: 560px) {
+      /* Nav */
+      .nav-inner { padding: 16px 20px; }
+      .nav-links { gap: 10px; }
+      .nav-links a { font-size: 8px; letter-spacing: 0.10em; }
+      .nav-logo { font-size: 18px; }
+      .nav-logo-img { width: 28px; height: 28px; }
+
+      /* Hero */
+      .about-photo-col { padding: 36px 20px 0; }
+      .photo-deck { width: 240px; height: 310px; }
+      .photo-deck-label { font-size: 7px; }
+      .about-info-col { padding: 44px 20px 48px; }
+      .about-tag { font-size: 8px; }
+      .about-name { font-size: clamp(36px, 12vw, 56px); }
+      .about-bio { font-size: 13px; line-height: 1.7; }
+      .about-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+      }
+      .stat-num { font-size: 28px; }
+      .stat-label { font-size: 8px; }
+      .resume-btn { font-size: 9px; padding: 14px 24px; }
+      .scroll-hint { display: none; }
+
+      /* Sections */
+      .sections-wrap { padding: 0 20px 60px; }
+      .section-block { padding: 44px 0; }
+      .section-block-title { font-size: clamp(28px, 8vw, 44px); }
+
+      /* Skills */
+      .skills-grid { grid-template-columns: 1fr; }
+      .skill-item { padding: 20px; }
+
+      /* Education */
+      .edu-card-body { padding: 20px; }
+      .edu-card-school { font-size: 18px; }
+      .edu-card-detail { padding-top: 12px; }
+
+      /* Experience */
+      .exp-item { padding: 20px; }
+      .exp-title { font-size: 16px; }
+      .exp-meta { flex-direction: column; gap: 4px; }
+
+      /* Capabilities */
+      .cap-item { padding: 0; }
+      .cap-grid { gap: 28px; }
+
+      /* Certifications */
+      .cert-tabs { gap: 0; border-bottom: 1px solid var(--line); }
+      .cert-tab { flex: 1; justify-content: center; padding: 10px 8px; }
+      .cert-tab-icon { display: none; }
+      .cert-preview-card { grid-template-columns: 1fr; }
+      .cert-preview-img { min-height: 180px; }
+      .cert-preview-details { padding: 20px; }
+      .cert-preview-name { font-size: 16px; }
+      .cert-row { padding: 12px 14px; }
+      .cert-row-num { display: none; }
+      .cert-nav { padding: 12px 14px; }
+
+      /* Footer */
+      .footer-inner { padding: 16px 20px; gap: 10px; }
+      .footer-links { gap: 12px; }
+    }
+
+    /* ═══════════════════════════════════
+       RESPONSIVE — Small phones (≤380px)
+    ═══════════════════════════════════ */
+    @media (max-width: 380px) {
+      .nav-links { gap: 8px; }
+      .photo-deck { width: 200px; height: 260px; }
+      .about-name { font-size: 32px; }
+      .stat-num { font-size: 24px; }
+      .cert-tab { font-size: 7px; padding: 8px 6px; }
+      .section-block-title { font-size: 26px; }
     }
   
     /* ── BG SYSTEM ── */
@@ -880,8 +1315,8 @@
     body.light-mode .nav-logo { color: #1c1c1c; }
     body.light-mode .nav-links a { color: #666; }
     body.light-mode .nav-links a:hover { color: #1c1c1c; }
-    body.light-mode .nav-links a.active { color: #8a6500; }
-    body.light-mode .nav-links a::after { background: #8a6500; }
+    body.light-mode .nav-links a.active { color: #1c1c1c; }
+    body.light-mode .nav-links a::after { background: #1c1c1c; }
     body.light-mode .cursor { background: #1c1c1c; mix-blend-mode: normal; }
     body.light-mode .cursor-ring { border-color: rgba(0,0,0,0.28); }
     body, nav, footer { transition: background-color 0.6s ease, color 0.6s ease; }
@@ -902,7 +1337,7 @@
       color: #1c1c1c !important;
       -webkit-text-stroke: 0 !important;
     }
-    body.light-mode .about-tag { color: #8a6500; }
+    body.light-mode .about-tag { color: #1c1c1c; }
     body.light-mode .about-bio { color: #555; border-color: rgba(0,0,0,0.12); }
     body.light-mode .about-name-underline { background: #1c1c1c; }
 
@@ -912,8 +1347,8 @@
     body.light-mode .stat-label { color: #777; }
 
     /* Resume button */
-    body.light-mode .resume-btn { border-color: rgba(0,0,0,0.2); color: #1c1c1c; background: transparent; }
-    body.light-mode .resume-btn:hover { border-color: #8a6500; color: #8a6500; }
+    body.light-mode .resume-btn { border-color: #1c1c1c; color: #f4f4f0; background: #1c1c1c; }
+    body.light-mode .resume-btn:hover { border-color: #000; background: #000; color: #f4f4f0; }
 
     /* Scroll hint */
     body.light-mode .scroll-hint span { color: #999; }
@@ -929,48 +1364,49 @@
     body.light-mode .skills-grid { background: rgba(0,0,0,0.06); }
     body.light-mode .skill-item { background: #e2e0dc; }
     body.light-mode .skill-item:hover { background: #d4d2ce; }
-    body.light-mode .skill-item::before { background: #8a6500; }
-    body.light-mode .skill-category { color: #8a6500; }
+    body.light-mode .skill-item::before { background: #1c1c1c; }
+    body.light-mode .skill-category { color: #1c1c1c; }
     body.light-mode .skill-list li { color: #444; }
     body.light-mode .skill-item:hover .skill-list li { color: #1c1c1c; }
     body.light-mode .skill-list li::before { color: transparent; }
-    body.light-mode .skill-item:hover .skill-list li::before { color: #8a6500; }
+    body.light-mode .skill-item:hover .skill-list li::before { color: #1c1c1c; }
 
     /* ── EDUCATION ── */
     body.light-mode .edu-cards { background: transparent; }
     body.light-mode .edu-card { background: #e2e0dc; border-color: rgba(0,0,0,0.07); }
     body.light-mode .edu-card:hover { background: #d4d2ce; }
-    body.light-mode .edu-card::before { background: #8a6500; }
+    body.light-mode .edu-card::before { background: #1c1c1c; }
     body.light-mode .edu-card-badge { border-color: rgba(0,0,0,0.12); color: #777; background: transparent; }
     body.light-mode .edu-card-school { color: #1c1c1c; }
     body.light-mode .edu-card-degree { color: #444; }
     body.light-mode .edu-card-tag { border-color: rgba(0,0,0,0.12); color: #555; background: transparent; }
     body.light-mode .edu-card-detail { border-color: rgba(0,0,0,0.1); }
-    body.light-mode .edu-detail-year { color: #8a6500; }
+    body.light-mode .edu-detail-year { color: #1c1c1c; }
     body.light-mode .edu-detail-note { color: #555; }
     body.light-mode .edu-meta-item { color: #777; }
     /* Brighten education card photos */
-    body.light-mode .edu-card-img img { filter: grayscale(0%) brightness(1) !important; }
+    body.light-mode .edu-card-img img { filter: grayscale(0%) brightness(0.92) !important; }
+    body.light-mode .edu-card-img { box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10); }
     body.light-mode .edu-card-img::after { opacity: 0 !important; }
 
     /* ── EXPERIENCE ── */
     body.light-mode .exp-list { background: rgba(0,0,0,0.06); }
     body.light-mode .exp-item { background: #e2e0dc; }
     body.light-mode .exp-item:hover { background: #d4d2ce; }
-    body.light-mode .exp-item::before { background: #8a6500; }
+    body.light-mode .exp-item::before { background: #1c1c1c; }
     /* Make background photo more visible in light mode */
     body.light-mode .exp-item::after {
-      opacity: 0.18 !important;
+      opacity: 0.35 !important;
       -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 75%) !important;
       mask-image: linear-gradient(to left, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 75%) !important;
       filter: grayscale(40%) brightness(0.85);
     }
-    body.light-mode .exp-item:hover::after { opacity: 0.28 !important; }
-    body.light-mode .exp-year { color: #8a6500; }
+    body.light-mode .exp-item:hover::after { opacity: 0.45 !important; }
+    body.light-mode .exp-year { color: #555; }
     body.light-mode .exp-org { color: #1c1c1c; }
-    body.light-mode .exp-role { color: #8a6500; }
+    body.light-mode .exp-role { color: #1c1c1c; }
     body.light-mode .exp-desc { color: #555; }
-    body.light-mode .exp-dot { background: #8a6500 !important; box-shadow: 0 0 0 3px rgba(138,101,0,0.15) !important; }
+    body.light-mode .exp-dot { background: #1c1c1c !important; box-shadow: 0 0 0 3px rgba(0,0,0,0.12) !important; }
 
     /* ── CAPABILITIES ── */
     body.light-mode .cap-cat-title { color: #1c1c1c; }
@@ -982,8 +1418,8 @@
     body.light-mode .cert-grid { background: transparent; }
     body.light-mode .cert-item { background: #e2e0dc; border-color: rgba(0,0,0,0.07); }
     body.light-mode .cert-item:hover { background: #d4d2ce; }
-    body.light-mode .cert-item::before { background: #8a6500; }
-    body.light-mode .cert-issuer { color: #8a6500; }
+    body.light-mode .cert-item::before { background: #1c1c1c; }
+    body.light-mode .cert-issuer { color: #1c1c1c; }
     body.light-mode .cert-name { color: #1c1c1c; }
     body.light-mode .cert-link { color: #888; }
     body.light-mode .cert-link:hover { color: #1c1c1c; }
@@ -1052,8 +1488,6 @@
   <canvas id="gridCanvas"></canvas>
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- PAGE CONTENT WRAPPER -->
   <div id="pageContent" style="position:relative;z-index:4;">
@@ -1077,10 +1511,34 @@
   <section class="about-hero-outer">
   <div class="about-hero">
 
-    <!-- LEFT: Photo -->
+    <!-- LEFT: Photo Deck -->
     <div class="about-photo-col">
       <div class="about-photo-wrap">
-        <img src="images/personal_image.png" alt="Kurt Justine Sicat" />
+        <div class="photo-deck" id="photoDeck">
+          <div class="photo-card front" style="z-index:5;--rot:rotate(0deg);transform:rotate(0deg)">
+            <img src="images/about/1.jpg" alt="Photo 1" />
+          </div>
+          <div class="photo-card" style="z-index:4;--rot2:rotate(-6deg);transform:rotate(-6deg)">
+            <img src="images/about/2.jpg" alt="Photo 2" />
+          </div>
+          <div class="photo-card" style="z-index:3;--rot3:rotate(-11deg);transform:rotate(-11deg)">
+            <img src="images/about/3.jpg" alt="Photo 3" />
+          </div>
+          <div class="photo-card" style="z-index:2;--rot4:rotate(7deg);transform:rotate(7deg)">
+            <img src="images/about/4.jpg" alt="Photo 4" />
+          </div>
+          <div class="photo-card" style="z-index:1;--rot5:rotate(13deg);transform:rotate(13deg)">
+            <img src="images/about/5.jpg" alt="Photo 5" />
+          </div>
+          <div class="photo-deck-dots" id="deckDots">
+            <div class="photo-deck-dot active"></div>
+            <div class="photo-deck-dot"></div>
+            <div class="photo-deck-dot"></div>
+            <div class="photo-deck-dot"></div>
+            <div class="photo-deck-dot"></div>
+          </div>
+          <div class="photo-deck-label">TAP TO CYCLE</div>
+        </div>
       </div>
     </div>
 
@@ -1100,11 +1558,11 @@
       </p>
       <div class="about-stats">
         <div class="stat-item">
-          <div class="stat-num" data-target="4">0+</div>
+          <div class="stat-num" data-target="5">0+</div>
           <div class="stat-label">Projects Built</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num" data-target="6">0+</div>
+          <div class="stat-num" data-target="20">0+</div>
           <div class="stat-label">Certifications</div>
         </div>
         <div class="stat-item">
@@ -1183,7 +1641,7 @@
       </div>
       <div class="edu-cards">
         <div class="edu-card">
-          <div class="edu-card-badge">2022 — Present</div>
+          <div class="edu-card-badge">2023 — Present</div>
           <div class="edu-card-img">
             <img src="images/hau.jpg" alt="Holy Angel University" onload="this.classList.add('loaded')" />
             <div class="edu-card-img-fallback">
@@ -1200,26 +1658,26 @@
             </div>
             <div class="edu-card-detail">
               <div class="edu-card-detail-row">
-                <span class="edu-detail-year">1st Year (2022–2023)</span>
+                <span class="edu-detail-year">1st Year (2023–2024)</span>
                 <span class="edu-detail-note">1st Sem: Dean's List (GWA: 1.42) · 2nd Sem: President's List (GWA: 1.13)</span>
               </div>
               <div class="edu-card-detail-row">
-                <span class="edu-detail-year">2nd Year (2023–2024)</span>
+                <span class="edu-detail-year">2nd Year (2024–2025)</span>
                 <span class="edu-detail-note">1st Sem: Dean's List (GWA: 1.48) · 2nd Sem: President's List (GWA: 1.22)</span>
               </div>
               <div class="edu-card-detail-row">
-                <span class="edu-detail-year">3rd Year (2024–2025)</span>
+                <span class="edu-detail-year">3rd Year (2025–2026)</span>
                 <span class="edu-detail-note">Currently enrolled · BS IT Major in Web Development</span>
               </div>
             </div>
             <div class="edu-card-meta">
-              <span class="edu-meta-item">📍 Angeles City, Pampanga</span>
-              <span class="edu-meta-item">🎓 Expected Graduation: 2026</span>
+              <span class="edu-meta-item">Angeles City, Pampanga</span>
+              <span class="edu-meta-item">Expected Graduation: 2027</span>
             </div>
           </div>
         </div>
         <div class="edu-card">
-          <div class="edu-card-badge">2018 — 2022</div>
+          <div class="edu-card-badge">2019 — 2023</div>
           <div class="edu-card-img">
             <img src="images/phs.jpg" alt="Pampanga High School" onload="this.classList.add('loaded')" />
             <div class="edu-card-img-fallback">
@@ -1229,15 +1687,14 @@
           </div>
           <div class="edu-card-body">
             <h3 class="edu-card-school">Pampanga High School</h3>
-            <p class="edu-card-degree">General Academic Strand (GAS) · Graduated: 2022</p>
+            <p class="edu-card-degree">General Academic Strand (GAS) · Graduated: 2023</p>
             <div class="edu-card-tags">
+              <span class="edu-card-tag">Honors</span>
               <span class="edu-card-tag">High Honors</span>
-              <span class="edu-card-tag">Outstanding in Entrepreneurship</span>
-              <span class="edu-card-tag">Highest Pointer in Filipino sa Piling Larang</span>
             </div>
             <div class="edu-card-meta">
-              <span class="edu-meta-item">📍 Pampanga, Philippines</span>
-              <span class="edu-meta-item">🎓 Graduated: 2022</span>
+              <span class="edu-meta-item">Pampanga, Philippines</span>
+              <span class="edu-meta-item">Graduated: 2023</span>
             </div>
           </div>
         </div>
@@ -1417,6 +1874,20 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               <span>Certificate Preview</span>
             </div>
+            <div class="cert-inspect-overlay">
+              <div class="overlay-panel-left"></div>
+              <div class="overlay-panel-right"></div>
+              <div class="inspect-core">
+                <svg class="inspect-diamond" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="diamond-path" d="M26 4 L48 26 L26 48 L4 26 Z" stroke="rgba(192,192,192,0.9)" stroke-width="1.2" fill="none"/>
+                  <path class="diamond-path" d="M26 12 L40 26 L26 40 L12 26 Z" stroke="rgba(192,192,192,0.5)" stroke-width="0.8" fill="none" style="stroke-dasharray:80;stroke-dashoffset:80;transition-delay:0.4s"/>
+                  <circle class="diamond-dot" cx="26" cy="26" r="2.5" fill="rgba(192,192,192,0.9)"/>
+                </svg>
+                <div class="inspect-label">
+                  <span>I</span><span>N</span><span>S</span><span>P</span><span>E</span><span>C</span><span>T</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="cert-preview-details">
             <div class="cert-preview-issuer">CompTIA</div>
@@ -1447,6 +1918,20 @@
             <div class="cert-img-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               <span>Certificate Preview</span>
+            </div>
+            <div class="cert-inspect-overlay">
+              <div class="overlay-panel-left"></div>
+              <div class="overlay-panel-right"></div>
+              <div class="inspect-core">
+                <svg class="inspect-diamond" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="diamond-path" d="M26 4 L48 26 L26 48 L4 26 Z" stroke="rgba(192,192,192,0.9)" stroke-width="1.2" fill="none"/>
+                  <path class="diamond-path" d="M26 12 L40 26 L26 40 L12 26 Z" stroke="rgba(192,192,192,0.5)" stroke-width="0.8" fill="none" style="stroke-dasharray:80;stroke-dashoffset:80;transition-delay:0.4s"/>
+                  <circle class="diamond-dot" cx="26" cy="26" r="2.5" fill="rgba(192,192,192,0.9)"/>
+                </svg>
+                <div class="inspect-label">
+                  <span>I</span><span>N</span><span>S</span><span>P</span><span>E</span><span>C</span><span>T</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="cert-preview-details">
@@ -1499,6 +1984,20 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               <span>Certificate Preview</span>
             </div>
+            <div class="cert-inspect-overlay">
+              <div class="overlay-panel-left"></div>
+              <div class="overlay-panel-right"></div>
+              <div class="inspect-core">
+                <svg class="inspect-diamond" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="diamond-path" d="M26 4 L48 26 L26 48 L4 26 Z" stroke="rgba(192,192,192,0.9)" stroke-width="1.2" fill="none"/>
+                  <path class="diamond-path" d="M26 12 L40 26 L26 40 L12 26 Z" stroke="rgba(192,192,192,0.5)" stroke-width="0.8" fill="none" style="stroke-dasharray:80;stroke-dashoffset:80;transition-delay:0.4s"/>
+                  <circle class="diamond-dot" cx="26" cy="26" r="2.5" fill="rgba(192,192,192,0.9)"/>
+                </svg>
+                <div class="inspect-label">
+                  <span>I</span><span>N</span><span>S</span><span>P</span><span>E</span><span>C</span><span>T</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="cert-preview-details">
             <div class="cert-preview-issuer">HubSpot</div>
@@ -1550,6 +2049,20 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               <span>Certificate Preview</span>
             </div>
+            <div class="cert-inspect-overlay">
+              <div class="overlay-panel-left"></div>
+              <div class="overlay-panel-right"></div>
+              <div class="inspect-core">
+                <svg class="inspect-diamond" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="diamond-path" d="M26 4 L48 26 L26 48 L4 26 Z" stroke="rgba(192,192,192,0.9)" stroke-width="1.2" fill="none"/>
+                  <path class="diamond-path" d="M26 12 L40 26 L26 40 L12 26 Z" stroke="rgba(192,192,192,0.5)" stroke-width="0.8" fill="none" style="stroke-dasharray:80;stroke-dashoffset:80;transition-delay:0.4s"/>
+                  <circle class="diamond-dot" cx="26" cy="26" r="2.5" fill="rgba(192,192,192,0.9)"/>
+                </svg>
+                <div class="inspect-label">
+                  <span>I</span><span>N</span><span>S</span><span>P</span><span>E</span><span>C</span><span>T</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="cert-preview-details">
             <div class="cert-preview-issuer">Cisco</div>
@@ -1580,6 +2093,20 @@
             <div class="cert-img-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               <span>Certificate Preview</span>
+            </div>
+            <div class="cert-inspect-overlay">
+              <div class="overlay-panel-left"></div>
+              <div class="overlay-panel-right"></div>
+              <div class="inspect-core">
+                <svg class="inspect-diamond" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="diamond-path" d="M26 4 L48 26 L26 48 L4 26 Z" stroke="rgba(192,192,192,0.9)" stroke-width="1.2" fill="none"/>
+                  <path class="diamond-path" d="M26 12 L40 26 L26 40 L12 26 Z" stroke="rgba(192,192,192,0.5)" stroke-width="0.8" fill="none" style="stroke-dasharray:80;stroke-dashoffset:80;transition-delay:0.4s"/>
+                  <circle class="diamond-dot" cx="26" cy="26" r="2.5" fill="rgba(192,192,192,0.9)"/>
+                </svg>
+                <div class="inspect-label">
+                  <span>I</span><span>N</span><span>S</span><span>P</span><span>E</span><span>C</span><span>T</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="cert-preview-details">
@@ -1621,6 +2148,20 @@
             <div class="cert-img-placeholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               <span>Certificate Preview</span>
+            </div>
+            <div class="cert-inspect-overlay">
+              <div class="overlay-panel-left"></div>
+              <div class="overlay-panel-right"></div>
+              <div class="inspect-core">
+                <svg class="inspect-diamond" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="diamond-path" d="M26 4 L48 26 L26 48 L4 26 Z" stroke="rgba(192,192,192,0.9)" stroke-width="1.2" fill="none"/>
+                  <path class="diamond-path" d="M26 12 L40 26 L26 40 L12 26 Z" stroke="rgba(192,192,192,0.5)" stroke-width="0.8" fill="none" style="stroke-dasharray:80;stroke-dashoffset:80;transition-delay:0.4s"/>
+                  <circle class="diamond-dot" cx="26" cy="26" r="2.5" fill="rgba(192,192,192,0.9)"/>
+                </svg>
+                <div class="inspect-label">
+                  <span>I</span><span>N</span><span>S</span><span>P</span><span>E</span><span>C</span><span>T</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="cert-preview-details">
@@ -1685,30 +2226,32 @@
     // ── CUSTOM CURSOR ──
     const cursor = document.getElementById('cursor');
     const ring = document.getElementById('cursorRing');
-    // Hide cursor until mouse moves
-    if(cursor) cursor.style.opacity = '0';
-    document.addEventListener('mousemove', () => { if(cursor) cursor.style.opacity = '1'; }, { once: true });
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
-    });
-    (function animateRing() {
-      rx += (mx - rx - 17) * 0.12;
-      ry += (my - ry - 17) * 0.12;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(animateRing);
-    })();
-    document.querySelectorAll('a, .skill-item, .cert-item, .edu-item, .exp-item, .resume-btn').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        ring.style.width = '52px'; ring.style.height = '52px';
-        ring.style.borderColor = 'rgba(192,192,192,0.5)';
+    if (cursor && ring) {
+      // Hide cursor until mouse moves
+      cursor.style.opacity = '0';
+      document.addEventListener('mousemove', () => { cursor.style.opacity = '1'; }, { once: true });
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
       });
-      el.addEventListener('mouseleave', () => {
-        ring.style.width = '34px'; ring.style.height = '34px';
-        ring.style.borderColor = 'rgba(244,244,240,0.4)';
+      (function animateRing() {
+        rx += (mx - rx - 17) * 0.12;
+        ry += (my - ry - 17) * 0.12;
+        ring.style.transform = `translate(${rx}px, ${ry}px)`;
+        requestAnimationFrame(animateRing);
+      })();
+      document.querySelectorAll('a, .skill-item, .cert-item, .edu-item, .exp-item, .resume-btn').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          ring.style.width = '52px'; ring.style.height = '52px';
+          ring.style.borderColor = 'rgba(192,192,192,0.5)';
+        });
+        el.addEventListener('mouseleave', () => {
+          ring.style.width = '34px'; ring.style.height = '34px';
+          ring.style.borderColor = 'rgba(244,244,240,0.4)';
+        });
       });
-    });
+    }
 
     // ── AMBIENT PARTICLES ──
     const canvas = document.getElementById('particlesCanvas');
@@ -2681,6 +3224,142 @@
       });
     })();
 
-    </script>
+    
+    // ── Cert Lightbox ──
+    window.addEventListener('DOMContentLoaded', function(){
+      const lb     = document.getElementById('cert-lightbox');
+      const lbImg  = document.getElementById('cert-lightbox-img');
+      const lbClose= document.getElementById('cert-lightbox-close');
+
+      if (!lb || !lbImg || !lbClose) return;
+
+      function openLightbox(src) {
+        lb.classList.remove('closing');
+        lbImg.src = src;
+        lb.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lb.classList.add('closing');
+        setTimeout(() => {
+          lb.classList.remove('active', 'closing');
+          document.body.style.overflow = '';
+          lbImg.src = '';
+        }, 380);
+      }
+
+      document.querySelectorAll('.inspect-core').forEach(core => {
+        core.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const previewImg = core.closest('.cert-preview-img');
+          const imgEl = previewImg && previewImg.querySelector('img');
+          if (imgEl && imgEl.src) openLightbox(imgEl.src);
+        });
+      });
+
+      lbClose.addEventListener('click', closeLightbox);
+      lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+    });
+
+  
+    // ── Photo Deck ──
+    (function(){
+      const deck = document.getElementById('photoDeck');
+      if (!deck) return;
+
+      const cards = Array.from(deck.querySelectorAll('.photo-card'));
+      const dots  = Array.from(deck.querySelectorAll('.photo-deck-dot'));
+      const label = deck.querySelector('.photo-deck-label');
+      const ROTS  = [0, -6, -11, 7, 13];
+      let front = 0;
+      let autoTimer = null;
+      let lastInteraction = 0;
+      const IDLE_DELAY = 3000; // ms before auto-cycle kicks in after interaction
+
+      // Rotations for back cards (randomised per cycle)
+      function getRots() {
+        const base = [-14, -8, 8, 14];
+        return base.sort(() => Math.random() - 0.5);
+      }
+
+      function applyStack(frontIdx) {
+        const n = cards.length;
+        const rots = getRots();
+        let rotIdx = 0;
+        cards.forEach((card, i) => {
+          const pos = ((i - frontIdx) % n + n) % n; // 0 = front
+          card.classList.toggle('front', pos === 0);
+          card.style.zIndex = n - pos;
+          if (pos === 0) {
+            card.style.transform = 'rotate(0deg) scale(1)';
+          } else {
+            const r = rots[rotIdx++ % rots.length];
+            card.style.setProperty('--rot' + (pos + 1), `rotate(${r}deg)`);
+            card.style.transform = `rotate(${r}deg)`;
+          }
+        });
+        dots.forEach((d, i) => d.classList.toggle('active', i === frontIdx));
+        if (label) label.textContent = `${frontIdx + 1} / ${n}`;
+      }
+
+      function cycleRandom() {
+        const n = cards.length;
+        let next;
+        do { next = Math.floor(Math.random() * n); } while (next === front);
+        front = next;
+        applyStack(front);
+      }
+
+      function cycleNext() {
+        front = (front + 1) % cards.length;
+        // flash animation on outgoing front
+        const outgoing = cards.find(c => c.classList.contains('front'));
+        if (outgoing) {
+          outgoing.classList.add('flipping');
+          setTimeout(() => {
+            outgoing.classList.remove('flipping');
+            applyStack(front);
+          }, 180);
+        } else {
+          applyStack(front);
+        }
+      }
+
+      function startAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => {
+          if (Date.now() - lastInteraction > IDLE_DELAY) cycleRandom();
+        }, 3500);
+      }
+
+      // Click to cycle
+      deck.addEventListener('click', () => {
+        lastInteraction = Date.now();
+        cycleNext();
+      });
+
+      // Init
+      applyStack(0);
+      startAuto();
+    })();
+
+  </script>
+
+  <!-- ── Cert Lightbox ── -->
+  <div id="cert-lightbox">
+    <div id="cert-lightbox-inner">
+      <span id="cert-lightbox-ticks"></span>
+      <img id="cert-lightbox-img" src="" alt="Certificate" />
+      <button id="cert-lightbox-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="2" y1="2" x2="18" y2="18" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="18" y1="2" x2="2" y2="18" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
 </body>
 </html>
