@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Contact Kurt Justine Sicat — Full Stack Developer based in San Fernando, Pampanga. Available for work, collaborations, and freelance projects." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact — Kurt Justine Sicat</title>
+  <!-- SEO & OG -->
+  <meta property="og:title" content="Contact — Kurt Justine Sicat" />
+  <meta property="og:description" content="Get in touch with Kurt Justine Sicat — Full Stack Developer based in San Fernando, Pampanga." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kurtjustinesicat.com/contact.html" />
+  <meta name="author" content="Kurt Justine Sicat" />
+  <meta name="robots" content="index, follow" />
+  <meta name="keywords" content="Kurt Justine Sicat, Full Stack Developer, Vue.js, Node.js, Flutter, PHP, Holy Angel University, San Fernando Pampanga" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@1,600;1,700&display=swap" rel="stylesheet" />
@@ -263,7 +272,6 @@
     body.light-mode .fsubmit:hover { background:#000;border-color:#000; }
 
     .fsuccess { display:none;margin-top:12px;padding:14px 18px;border:1px solid rgba(79,255,176,0.25);background:rgba(79,255,176,0.03);animation:glitchIn 0.4s ease forwards; }
-    @keyframes glitchIn { 0%{opacity:0;transform:translateX(-4px)}20%{opacity:1;transform:translateX(3px)}40%{transform:translateX(-2px)}60%{transform:translateX(1px)}100%{opacity:1;transform:translateX(0)} }
     .fsuccess-title { font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:5px;display:flex;align-items:center;gap:7px; }
     .fsuccess-title::before { content:'✓'; }
     .fsuccess-body { font-size:11px;color:rgba(244,244,240,0.5);line-height:1.6; }
@@ -321,6 +329,154 @@
     body.light-mode #sbPanel .sbp-plat { color:#1c1c1c; }
     body.light-mode #sbPanel .sbp-plat::before { background:#1c1c1c; }
     body.light-mode #sbPanel .sbp-handle { color:rgba(28,28,28,0.85); }
+
+  /* ── PAGE TRANSITION — GLITCH DISSOLVE ── */
+  .pt-overlay {
+    position: fixed; inset: 0; z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--black);
+    transition: opacity 0.35s ease;
+  }
+  body.light-mode .pt-overlay { background: #e8e6e2; }
+
+  /* Glitch bars that flash over the top */
+  .pt-overlay::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(192,192,192,0.04) 3px,
+      rgba(192,192,192,0.04) 4px
+    );
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .pt-overlay.glitching::before { opacity: 1; }
+
+  /* Horizontal glitch slices */
+  .pt-glitch {
+    position: fixed; left: 0; right: 0;
+    z-index: 100000; pointer-events: none;
+    background: rgba(192,192,192,0.12);
+    height: 0; opacity: 0;
+    transition: none;
+  }
+  .pt-glitch.active {
+    animation: glitchSlice 0.5s steps(1) forwards;
+  }
+  @keyframes glitchSlice {
+    100% { opacity: 0; height: 0; }
+  }
+
+
+    /* ══ MOBILE NAV ══ */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 5px;
+      width: 36px; height: 36px;
+      cursor: none;
+      z-index: 9999;
+      position: relative;
+      background: none; border: none; padding: 4px;
+    }
+    .nav-burger span {
+      display: block;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.3s ease, transform 0.35s ease, opacity 0.25s ease;
+      transform-origin: right center;
+    }
+    .nav-burger span:nth-child(1) { width: 22px; }
+    .nav-burger span:nth-child(2) { width: 14px; }
+    .nav-burger span:nth-child(3) { width: 18px; }
+    .nav-burger.open span:nth-child(1) { width: 20px; transform: translateY(6px) rotate(-45deg); }
+    .nav-burger.open span:nth-child(2) { width: 0; opacity: 0; }
+    .nav-burger.open span:nth-child(3) { width: 20px; transform: translateY(-6px) rotate(45deg); }
+    body.light-mode .nav-burger span { background: #1c1c1c; }
+
+    /* Mobile menu overlay */
+    .nav-mobile {
+      position: fixed; inset: 0;
+      background: rgba(10,10,10,0.97);
+      backdrop-filter: blur(16px);
+      z-index: 9998;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .nav-mobile.open { opacity: 1; pointer-events: all; }
+    body.light-mode .nav-mobile { background: rgba(232,230,226,0.97); }
+
+    .nav-mobile-link {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 12vw, 80px);
+      letter-spacing: 0.04em;
+      color: rgba(244,244,240,0.15);
+      text-decoration: none;
+      line-height: 1;
+      padding: 8px 0;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease, color 0.25s ease;
+    }
+    .nav-mobile.open .nav-mobile-link {
+      opacity: 1; transform: translateY(0);
+    }
+    .nav-mobile.open .nav-mobile-link:nth-child(1) { transition-delay: 0.05s; }
+    .nav-mobile.open .nav-mobile-link:nth-child(2) { transition-delay: 0.10s; }
+    .nav-mobile.open .nav-mobile-link:nth-child(3) { transition-delay: 0.15s; }
+    .nav-mobile.open .nav-mobile-link:nth-child(4) { transition-delay: 0.20s; }
+    .nav-mobile-link:hover { color: var(--white); }
+    .nav-mobile-link.active { color: var(--accent); }
+    body.light-mode .nav-mobile-link { color: rgba(0,0,0,0.12); }
+    body.light-mode .nav-mobile-link:hover { color: #1c1c1c; }
+    body.light-mode .nav-mobile-link.active { color: #1c1c1c; }
+
+    /* Number label */
+    .nav-mobile-link::before {
+      content: attr(data-num);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--gray);
+      display: block;
+      margin-bottom: 2px;
+    }
+    body.light-mode .nav-mobile-link::before { color: #999; }
+
+    /* Mobile meta bar at bottom */
+    .nav-mobile-meta {
+      position: absolute; bottom: 40px;
+      display: flex; gap: 24px;
+      opacity: 0; transition: opacity 0.4s ease 0.3s;
+    }
+    .nav-mobile.open .nav-mobile-meta { opacity: 1; }
+    .nav-mobile-meta a {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gray); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-mobile-meta a:hover { color: var(--white); }
+    body.light-mode .nav-mobile-meta a { color: #888; }
+    body.light-mode .nav-mobile-meta a:hover { color: #1c1c1c; }
+
+    @media (max-width: 768px) {
+      .nav-burger { display: flex; }
+      .nav-links { display: none !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -349,6 +505,19 @@
     </svg>
   </div>
 
+
+  <!-- MOBILE NAV OVERLAY -->
+  <div class="nav-mobile" id="navMobile">
+    <a href="index.html" class="nav-mobile-link" data-num="01">Home</a>
+    <a href="works.html" class="nav-mobile-link" data-num="02">Works</a>
+    <a href="about.html" class="nav-mobile-link" data-num="03">About</a>
+    <a href="contact.html" class="nav-mobile-link active" data-num="04">Contact</a>
+    <div class="nav-mobile-meta">
+      <a href="https://www.linkedin.com/in/kurt-justine-sicat-14284434b/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/NeroNaur" target="_blank">GitHub</a>
+      <a href="https://www.instagram.com/agnosticnero/" target="_blank">Instagram</a>
+    </div>
+  </div>
   <div class="nav-progress" id="navProgress"></div>
   <canvas id="particlesCanvas"></canvas>
   <canvas id="constellationCanvas"></canvas>
@@ -365,6 +534,7 @@
         <li><a href="about.html">About</a></li>
         <li><a href="contact.html" class="active">Contact</a></li>
       </ul>
+      <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
@@ -486,6 +656,7 @@
     <div class="footer-inner">
       <span class="footer-copy">© 2026 Kurt Justine Sicat — All rights reserved.</span>
       <div class="footer-links">
+        <a href="Resume.pdf" download>Download CV</a>
         <a href="https://www.linkedin.com/in/kurt-justine-sicat-14284434b/" target="_blank">LinkedIn</a>
         <a href="https://github.com/NeroNaur" target="_blank">GitHub</a>
         <a href="https://www.facebook.com/kortnero/" target="_blank">Facebook</a>
@@ -643,5 +814,112 @@
       panel.addEventListener('mouseleave',hide);
     });
   </script>
+
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <script>
+  (function(){
+    const overlay = document.createElement('div');
+    overlay.className = 'pt-overlay';
+    const glitch = document.createElement('div');
+    glitch.className = 'pt-glitch';
+    document.body.appendChild(overlay);
+    document.body.appendChild(glitch);
+
+    function runGlitch() {
+      glitch.classList.remove('active');
+      void glitch.offsetWidth;
+      glitch.classList.add('active');
+    }
+
+    // On load: fade in from black
+    overlay.style.opacity = '1';
+    overlay.style.transition = 'none';
+    overlay.classList.add('glitching');
+    runGlitch();
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      overlay.style.transition = 'opacity 0.45s ease';
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.classList.remove('glitching');
+      }, 300);
+    }));
+
+    // On link click: glitch + fade to black, then navigate
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http') ||
+          href.startsWith('mailto') || href.startsWith('tel') ||
+          a.target === '_blank') return;
+      e.preventDefault();
+
+      // Start glitch bars
+      runGlitch();
+      overlay.classList.add('glitching');
+
+      // After short glitch, fade to black
+      setTimeout(() => {
+        overlay.style.transition = 'opacity 0.3s ease';
+        overlay.style.opacity = '1';
+      }, 100);
+
+      // Navigate when fully covered
+      setTimeout(() => {
+        window.location.href = href;
+      }, 430);
+    });
+  })();
+  </script>
+
+  <script>
+  (function(){
+    const burger = document.getElementById('navBurger');
+    const mobile = document.getElementById('navMobile');
+    if (!burger || !mobile) return;
+
+    // Set active link
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    mobile.querySelectorAll('.nav-mobile-link').forEach(a => {
+      if (a.getAttribute('href') === path) a.classList.add('active');
+    });
+
+    burger.addEventListener('click', () => {
+      const open = burger.classList.toggle('open');
+      mobile.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    // Close on link click (let transition handle navigation)
+    mobile.querySelectorAll('.nav-mobile-link').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        mobile.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && mobile.classList.contains('open')) {
+        burger.classList.remove('open');
+        mobile.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close when clicking backdrop (not on links)
+    mobile.addEventListener('click', e => {
+      if (e.target === mobile) {
+        burger.classList.remove('open');
+        mobile.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+  </script>
+
 </body>
 </html>
