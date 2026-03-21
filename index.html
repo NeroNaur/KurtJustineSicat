@@ -172,10 +172,12 @@
     body.light-mode .scroll-line::after { background: #8a6500; }
 
     /* Marquee strip */
-    body.light-mode .marquee-wrap {
-      border-color: rgba(0,0,0,0.1);
-      background: #e8e6e3;
+    body.light-mode     .marquee-wrap {
+      overflow: hidden; width: 100%; padding: 20px 0;
+      mask-image: linear-gradient(to right, black 0%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, black 0%, black 85%, transparent 100%);
     }
+    
     body.light-mode .marquee-item { color: #999; }
     body.light-mode .marquee-item:hover { color: #8a6500; }
     body.light-mode .m-sep { background: #c8960a; opacity: 0.7; }
@@ -905,89 +907,35 @@
         inset 0 1px 0 rgba(255,255,255,0.6),
         inset 0 -1px 0 rgba(255,255,255,0.6);
     }
-    .marquee-track {
-      display: flex;
-      gap: 16px;
-      animation: marquee 38s linear infinite;
-      align-items: center;
+        .marquee-track {
+      display: inline-flex; gap: 20px; align-items: center;
+      animation: marqueeScroll 22s linear infinite;
+      will-change: transform; white-space: nowrap; padding: 0; margin: 0;
     }
-    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-25%); } }
+    
+    .marquee-wrap:hover 
 
     /* Skill pill */
-    .cloud-item {
-      display: inline-flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      background: #1e1e1e;
-      border-radius: 100px;
-      padding: 10px 20px 10px 10px;
-      cursor: default;
-      box-shadow:
-        0 2px 8px rgba(0,0,0,0.5),
-        0 0 0 1px rgba(255,255,255,0.05);
-      animation: pillFloat 3.5s ease-in-out infinite;
-      transition: box-shadow 0.25s ease, background 0.25s ease;
+        .cloud-item {
+      display: inline-flex; flex-direction: column; align-items: center;
+      justify-content: center; flex-shrink: 0; padding: 4px;
+      background: transparent; border: none; cursor: default;
+      transition: none; width: 72px;
     }
-    .cloud-item:hover {
-      background: #272727;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.08);
+        .cloud-logo {
+      width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
     }
-    body.light-mode .cloud-item {
-      background: #d0cec9;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.06);
-    }
-    body.light-mode .cloud-item:hover {
-      background: #c8c5c0;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.14);
-    }
-
-    /* Logo container — not a circle, just a clean square-ish holder */
-    .cloud-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.05);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .cloud-logo img {
-      width: 100%; height: 100%;
-      object-fit: contain;
-    }
-    .cloud-logo .logo-placeholder {
-      font-size: 7px;
-      font-family: 'Space Mono', monospace;
-      color: rgba(192,192,192,0.35);
-      letter-spacing: 0.04em;
-      text-align: center;
-      line-height: 1.3;
-    }
-    body.light-mode .cloud-logo {
-      background: rgba(0,0,0,0.06);
-    }
-    body.light-mode .cloud-logo .logo-placeholder { color: rgba(0,0,0,0.22); }
-
-    /* Label */
-    .cloud-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(192,192,192,0.7);
-      white-space: nowrap;
-    }
+    .cloud-logo img { width: 56px; height: 56px; object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); transition: none; }
+    .cloud-logo .logo-placeholder { display: none; }
+        .cloud-label { display: none; }
+    
     body.light-mode .cloud-label { color: rgba(60,50,40,0.6); }
 
     /* Pill float */
-    @keyframes pillFloat {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-4px); }
-    }
+    
 
     /* PROJECTS */
     .projects-section { padding: 100px 0; max-width: var(--max); margin: 0 auto; padding-left: 60px; padding-right: 60px; }
@@ -1195,7 +1143,6 @@
     @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
     @keyframes scrollPulse {
       0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top}
       51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom}
@@ -1296,7 +1243,7 @@
 
       /* ── Marquee strip ── */
       .marquee-wrap { padding: 14px 0; }
-      .cloud-item { padding: 8px 14px 8px 8px; gap: 7px; }
+      
       .cloud-logo { width: 28px; height: 28px; }
       .cloud-label { font-size: 8px; }
 
@@ -1426,6 +1373,33 @@
       .contact-tease { padding: 36px 16px; }
       .footer-inner { padding: 18px 16px; }
     }
+    .tl-card-img-inner img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top center;
+      display: block; border-radius: 4px;
+      filter: grayscale(15%) brightness(0.75); transition: filter 0.4s, transform 0.4s;
+    }
+    .tl-card:hover .tl-card-img-inner img { filter: grayscale(0%) brightness(0.9); transform: scale(1.03); }
+
+    /* CTA link */
+    .cte-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(244,244,240,0.3);
+      padding-bottom: 3px;
+      margin-top: 18px;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .cte-link:hover { border-color: var(--white); color: var(--white); }
+    .cte-arrow { font-size: 14px; }
+    body.light-mode .cte-link { color: #1c1c1c; border-color: rgba(0,0,0,0.3); }
+    body.light-mode .cte-link:hover { border-color: #1c1c1c; }
   </style>
 </head>
 <body>
@@ -1504,7 +1478,7 @@
         <div class="hero-socials">
           <a href="https://www.linkedin.com/in/kurt-justine-sicat-14284434b/" target="_blank">LinkedIn</a>
           <span class="social-sep">/</span>
-          <a href="https://github.com/" target="_blank">GitHub</a>
+          <a href="https://github.com/NeroNaur" target="_blank">GitHub</a>
           <span class="social-sep">/</span>
           <a href="https://www.instagram.com/agnosticnero/" target="_blank">Instagram</a>
           <span class="social-sep">/</span>
@@ -1523,7 +1497,7 @@
       <!-- Intro — right side -->
       <div class="hero-right">
         <div class="intro-label"><em>—</em> Introduction</div>
-        <h2 class="intro-title">Full Stack Developer based in Angeles City.</h2>
+        <h2 class="intro-title">Full Stack Developer based in San Fernando, Pampanga.</h2>
         <p class="intro-bio">
           An IT student majoring in Web Development at Holy Angel University,
           dedicated to building responsive and efficient web applications.
@@ -1574,39 +1548,7 @@
   <!-- SKILLS CLOUD STRIP -->
   <div class="marquee-wrap">
     <div class="marquee-track" id="cloudTrack">
-
-      <!-- Set 1 -->
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">JavaScript</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">PHP</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Python</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Java</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">React</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Node.js</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Express.js</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">MySQL</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">MongoDB</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Vue</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Angular</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Figma</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">RESTful API</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">GitHub</span></div>
-
-      <!-- Set 2 (duplicate for seamless loop) -->
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">JavaScript</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">PHP</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Python</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Java</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">React</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Node.js</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Express.js</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">MySQL</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">MongoDB</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Vue</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Angular</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">Figma</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">RESTful API</span></div>
-      <div class="cloud-item"><div class="cloud-logo"><span class="logo-placeholder">IMG</span></div><span class="cloud-label">GitHub</span></div>
-
+      <div class="cloud-item"><div class="cloud-logo"><img src="images/javascript.webp" alt="JavaScript"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/php.png" alt="PHP"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/python.png" alt="Python"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/java.webp" alt="Java"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/vue.webp" alt="Vue"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/angular.png" alt="Angular"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/FIGMA.png" alt="Figma"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/html.png" alt="HTML"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/css.png" alt="CSS"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/javascript.webp" alt="JavaScript"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/php.png" alt="PHP"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/python.png" alt="Python"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/java.webp" alt="Java"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/vue.webp" alt="Vue"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/angular.png" alt="Angular"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/FIGMA.png" alt="Figma"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/html.png" alt="HTML"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/css.png" alt="CSS"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/javascript.webp" alt="JavaScript"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/php.png" alt="PHP"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/python.png" alt="Python"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/java.webp" alt="Java"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/vue.webp" alt="Vue"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/angular.png" alt="Angular"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/FIGMA.png" alt="Figma"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/html.png" alt="HTML"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/css.png" alt="CSS"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/javascript.webp" alt="JavaScript"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/php.png" alt="PHP"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/python.png" alt="Python"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/java.webp" alt="Java"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/vue.webp" alt="Vue"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/angular.png" alt="Angular"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/FIGMA.png" alt="Figma"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/html.png" alt="HTML"/></div></div> <div class="cloud-item"><div class="cloud-logo"><img src="images/css.png" alt="CSS"/></div></div>
     </div>
   </div>
 
@@ -1631,10 +1573,7 @@
       <div class="proj-checkpoint side-left" id="card0">
         <div class="tl-card" style="--card-accent:#c8c8c8;">
           <div class="tl-card-img">
-            <div class="tl-card-img-inner">
-              <svg class="tl-img-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="8" width="32" height="22" rx="3" stroke="white" stroke-width="1.5"/><circle cx="18" cy="19" r="6" stroke="white" stroke-width="1.5"/><path d="M13 8l2-4h6l2 4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span class="tl-img-label">Project Preview</span>
-            </div>
+            <div class="tl-card-img-inner"><img src="images/projects/grabmeyaya.jpg" alt="Project 1" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;" onerror="this.style.display='none'"/></div>
             <div class="tl-card-img-bar"></div>
           </div>
           <div class="tl-card-body">
@@ -1642,11 +1581,11 @@
             <h3 class="tl-card-title">GrabMeYaya</h3>
             <p class="tl-card-desc">A web-based platform connecting parents with qualified nannies in Angeles City. Users can register, post or apply for jobs, and manage profiles through a CRUD-based database system.</p>
             <div class="tl-card-tags">
-              <span class="tl-tag">MySQL</span><span class="tl-tag">CRUD</span><span class="tl-tag">[ Add stack ]</span>
+              <span class="tl-tag">PHP</span><span class="tl-tag">MySQL</span><span class="tl-tag">CRUD</span><span class="tl-tag">Role-based Auth</span>
             </div>
           </div>
           <div class="tl-card-num">01</div>
-          <a href="#" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
+          <a href="works.html" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
         </div>
       </div>
 
@@ -1654,20 +1593,17 @@
       <div class="proj-checkpoint side-right" id="card1">
         <div class="tl-card" style="--card-accent:#a0a0a0;">
           <div class="tl-card-img">
-            <div class="tl-card-img-inner">
-              <svg class="tl-img-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="8" width="32" height="22" rx="3" stroke="white" stroke-width="1.5"/><circle cx="18" cy="19" r="6" stroke="white" stroke-width="1.5"/><path d="M13 8l2-4h6l2 4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span class="tl-img-label">Project Preview</span>
-            </div>
+            <div class="tl-card-img-inner"><img src="images/projects/fixify.png" alt="Project 2" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;" onerror="this.style.display='none'"/></div>
             <div class="tl-card-img-bar"></div>
           </div>
           <div class="tl-card-body">
             <div class="tl-card-type" style="color:#a0a0a0;">Service Platform</div>
             <h3 class="tl-card-title">Fixify</h3>
             <p class="tl-card-desc">A platform connecting users with trusted local service providers for various household services, ensuring convenient booking and reliable assistance.</p>
-            <div class="tl-card-tags"><span class="tl-tag">[ Add stack ]</span></div>
+            <div class="tl-card-tags"><span class="tl-tag">Vue.js 3</span><span class="tl-tag">Node.js</span><span class="tl-tag">MongoDB</span><span class="tl-tag">JWT Auth</span></div>
           </div>
           <div class="tl-card-num">02</div>
-          <a href="#" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
+          <a href="works.html" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
         </div>
       </div>
 
@@ -1675,20 +1611,17 @@
       <div class="proj-checkpoint side-left" id="card2">
         <div class="tl-card" style="--card-accent:#e0e0e0;">
           <div class="tl-card-img">
-            <div class="tl-card-img-inner">
-              <svg class="tl-img-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="8" width="32" height="22" rx="3" stroke="white" stroke-width="1.5"/><circle cx="18" cy="19" r="6" stroke="white" stroke-width="1.5"/><path d="M13 8l2-4h6l2 4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span class="tl-img-label">Project Preview</span>
-            </div>
+            <div class="tl-card-img-inner"><img src="images/projects/tripify.png" alt="Project 3" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;" onerror="this.style.display='none'"/></div>
             <div class="tl-card-img-bar"></div>
           </div>
           <div class="tl-card-body">
             <div class="tl-card-type" style="color:#e0e0e0;">Transportation Website</div>
             <h3 class="tl-card-title">Tripify</h3>
             <p class="tl-card-desc">A transportation web platform designed to provide efficient and convenient travel solutions for users across the region.</p>
-            <div class="tl-card-tags"><span class="tl-tag">[ Add stack ]</span></div>
+            <div class="tl-card-tags"><span class="tl-tag">Flutter</span><span class="tl-tag">Dart</span><span class="tl-tag">Supabase</span><span class="tl-tag">Google Maps API</span></div>
           </div>
           <div class="tl-card-num">03</div>
-          <a href="#" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
+          <a href="works.html" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
         </div>
       </div>
 
@@ -1696,20 +1629,17 @@
       <div class="proj-checkpoint side-right" id="card3">
         <div class="tl-card" style="--card-accent:#787878;">
           <div class="tl-card-img">
-            <div class="tl-card-img-inner">
-              <svg class="tl-img-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="8" width="32" height="22" rx="3" stroke="white" stroke-width="1.5"/><circle cx="18" cy="19" r="6" stroke="white" stroke-width="1.5"/><path d="M13 8l2-4h6l2 4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span class="tl-img-label">Project Preview</span>
-            </div>
+            <div class="tl-card-img-inner"><img src="images/projects/velasquez.jpg" alt="Project 4" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;" onerror="this.style.display='none'"/></div>
             <div class="tl-card-img-bar"></div>
           </div>
           <div class="tl-card-body">
             <div class="tl-card-type" style="color:#787878;">Business Website</div>
             <h3 class="tl-card-title">VelasquezFuneral</h3>
             <p class="tl-card-desc">A professional funeral services website built for a local business, combining solemn aesthetics with clear service information and dignified presentation.</p>
-            <div class="tl-card-tags"><span class="tl-tag">[ Add stack ]</span></div>
+            <div class="tl-card-tags"><span class="tl-tag">Vue.js 3</span><span class="tl-tag">Node.js</span><span class="tl-tag">MongoDB</span><span class="tl-tag">Cloudinary</span></div>
           </div>
           <div class="tl-card-num">04</div>
-          <a href="#" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
+          <a href="works.html" class="tl-card-link">View Project <span class="tl-card-link-arrow"></span></a>
         </div>
       </div>
 
@@ -1727,9 +1657,7 @@
     </div>
     <div>
       <p class="ct-quote">"The best way to predict the future is to build it."</p>
-      <a href="/cdn-cgi/l/email-protection#afdcc6cccedbc4dadddbefc8c2cec6c381ccc0c2" class="ct-email">
-        <span class="__cf_email__" data-cfemail="bbc8d2d8dacfd0cec9cffbdcd6dad2d795d8d4d6">[email&#160;protected]</span> <span class="cte-arrow"></span>
-      </a>
+      <a href="contact.html" class="cte-link">Get In Touch <span class="cte-arrow">→</span></a>
     </div>
   </section>
 
@@ -1739,7 +1667,7 @@
       <span class="footer-copy">© 2025 Kurt Justine Sicat — All rights reserved.</span>
       <div class="footer-links">
         <a href="https://www.linkedin.com/in/kurt-justine-sicat-14284434b/" target="_blank">LinkedIn</a>
-        <a href="https://github.com/" target="_blank">GitHub</a>
+        <a href="https://github.com/NeroNaur" target="_blank">GitHub</a>
         <a href="https://www.facebook.com/kortnero/" target="_blank">Facebook</a>
         <a href="https://www.instagram.com/agnosticnero/" target="_blank">Instagram</a>
       </div>

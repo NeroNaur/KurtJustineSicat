@@ -226,14 +226,14 @@
     .fgroup:focus-within .flabel { color:var(--accent); }
     .finput,.ftextarea { width:100%;background:transparent;border:none;border-bottom:1px solid rgba(244,244,240,0.09);padding:7px 0;color:rgba(244,244,240,0.92);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color 0.3s;caret-color:var(--accent); }
     .finput:focus,.ftextarea:focus { border-color:rgba(192,192,192,0.38);box-shadow:0 1px 0 0 rgba(192,192,192,0.15); }
-    .finput::placeholder,.ftextarea::placeholder { color:rgba(122,122,122,0.55); }
+    .finput::placeholder,.ftextarea::placeholder { color:rgba(244,244,240,0.35); }
     .ftextarea { resize:none;height:80px;display:block; }
     .fchar { font-family:'Space Mono',monospace;font-size:7px;color:rgba(192,192,192,0.22);text-align:right;margin-top:3px; }
     body.light-mode .flabel { color:rgba(0,0,0,0.3); }
     body.light-mode .fgroup:focus-within .flabel { color:#1c1c1c; }
     body.light-mode .finput, body.light-mode .ftextarea { color:#1c1c1c;border-color:rgba(0,0,0,0.12);caret-color:#1c1c1c; }
     body.light-mode .finput:focus,.ftextarea:focus { border-color:rgba(0,0,0,0.38);box-shadow:0 1px 0 0 rgba(0,0,0,0.18); }
-    body.light-mode .finput::placeholder,.ftextarea::placeholder { color:rgba(0,0,0,0.35); }
+    body.light-mode .finput::placeholder, body.light-mode .ftextarea::placeholder { color:rgba(0,0,0,0.35); }
     body.light-mode .fchar { color:rgba(0,0,0,0.18); }
 
     .fchips-lbl { font-family:'Space Mono',monospace;font-size:7px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(192,192,192,0.35);display:block;margin-bottom:9px; }
@@ -447,10 +447,10 @@
           <div class="form-fields-panel">
             <form id="txForm" novalidate>
               <div class="frow">
-                <div class="fgroup"><label class="flabel">First Name</label><input type="text" class="finput" placeholder="Juan" required /></div>
-                <div class="fgroup"><label class="flabel">Last Name</label><input type="text" class="finput" placeholder="Dela Cruz" required /></div>
+                <div class="fgroup"><label class="flabel">First Name</label><input type="text" class="finput" placeholder="Kurt Justine" required /></div>
+                <div class="fgroup"><label class="flabel">Last Name</label><input type="text" class="finput" placeholder="Sicat" required /></div>
               </div>
-              <div class="fgroup"><label class="flabel">Email</label><input type="email" class="finput" placeholder="juan@email.com" required /></div>
+              <div class="fgroup"><label class="flabel">Email</label><input type="email" class="finput" placeholder="sicatkurt@gmail.com" required /></div>
               <div class="fgroup">
                 <span class="fchips-lbl">Subject</span>
                 <div class="fchips" id="txChips">
