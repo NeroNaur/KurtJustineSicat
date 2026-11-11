@@ -2746,6 +2746,12 @@
       if (countEl) countEl.textContent = String(total).padStart(2,'0') + ' Certs';
     })();
 
+    // ── Deep links (e.g. resume QR → #certifications): re-scroll after images load ──
+    window.addEventListener('load', () => {
+      const target = location.hash && document.getElementById(location.hash.slice(1));
+      if (target) setTimeout(() => target.scrollIntoView({ behavior: 'auto', block: 'start' }), 150);
+    });
+
     // ── GENERAL SCROLL REVEAL ──
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
