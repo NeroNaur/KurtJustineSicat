@@ -400,14 +400,6 @@
       z-index: 0;
     }
     .exp-item:hover::after { opacity: 0.38; }
-    /* Close-up photos: show the whole image on the right on wide screens */
-    @media (min-width: 861px) {
-      .exp-item.exp-photo-fit::after {
-        background-image: var(--exp-photo-wide, var(--exp-photo));
-        background-size: auto 100%; background-position: right center;
-        -webkit-mask-image: none; mask-image: none;
-      }
-    }
     .exp-year {
       font-family: 'Space Mono', monospace;
       font-size: 10px; letter-spacing: 0.12em;
@@ -1871,7 +1863,7 @@
         <span class="section-count">05 Roles</span>
       </div>
       <div class="exp-list">
-        <div class="exp-item exp-photo-fit" style="--exp-photo: url('images/cila_ojt.jpg'); --exp-photo-wide: url('images/cila_ojt_fade.webp')">
+        <div class="exp-item" style="--exp-photo: url('images/cila_ojt.jpg'); --exp-photo-pos: 85% center">
           <div class="exp-dot"></div>
           <div class="exp-year">Jul — Oct 2026</div>
           <div class="exp-content">
