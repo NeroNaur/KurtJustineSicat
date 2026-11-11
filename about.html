@@ -392,7 +392,7 @@
       content: '';
       position: absolute; inset: 0;
       background-image: var(--exp-photo, none);
-      background-size: cover; background-position: center;
+      background-size: cover; background-position: var(--exp-photo-pos, center);
       opacity: 0.25;
       -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 75%);
       mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 75%);
@@ -1860,11 +1860,19 @@
     <div class="section-block">
       <div class="section-block-header">
         <h2 class="section-block-title">Experience</h2>
-        <span class="section-count">04 Roles</span>
+        <span class="section-count">05 Roles</span>
       </div>
       <div class="exp-list">
-        <div class="exp-item" style="--exp-photo: url('images/loop_hau.jpg')">
+        <div class="exp-item" style="--exp-photo: url('images/cila_ojt.jpg'); --exp-photo-pos: center 20%">
           <div class="exp-dot"></div>
+          <div class="exp-year">Jul — Oct 2026</div>
+          <div class="exp-content">
+            <div class="exp-org">Clark Investors and Locators Association (CILA)</div>
+            <div class="exp-role">Web &amp; Creatives Intern</div>
+            <div class="exp-desc">Maintained and updated the organization's WordPress website and produced digital materials — membership and sponsorship presentations and event publication graphics — while supporting data compilation and documentation for board operations across a 486-hour internship.</div>
+          </div>
+        </div>
+        <div class="exp-item" style="--exp-photo: url('images/loop_hau.jpg')">
           <div class="exp-year">2024 — 2025</div>
           <div class="exp-content">
             <div class="exp-org">LOOP HAU</div>
